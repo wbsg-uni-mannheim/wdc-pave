@@ -9,7 +9,7 @@ example_selectors=( "SemanticSimilarity" )
 schema_type="list"
 title=True
 description=True
-force_from_different_website=True
+force_from_different_website=False
 separate=False
 
 
