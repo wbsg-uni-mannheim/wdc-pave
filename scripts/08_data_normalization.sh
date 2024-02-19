@@ -4,10 +4,9 @@ export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/wdc-pave/:$PYTHONPATH"
 
 verbose=True
 datasets=("wdc") 
-models=("gpt-4-1106-preview")  # "gpt-4-1106-preview" "gpt-3.5-turbo-0613"
+models=("gpt-3.5-turbo-0613")  # "gpt-4-1106-preview" "gpt-3.5-turbo-0613"
 schema_type="json_schema" 
-train_percentage=0.2
-with_containment=False
+train_percentage=1
 replace_example_values=False
 title=True
 description=True

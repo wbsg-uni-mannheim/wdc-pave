@@ -30,7 +30,6 @@ from pieutils.pydantic_models import ProductCategory
 @click.option('--dataset', default='wdc', help='Dataset Name')
 @click.option('--model', default='gpt-3.5-turbo-0613', help='Model name')
 @click.option('--verbose', default=True, help='Verbose mode')
-@click.option('--with_containment', default=False, help='Use containment')
 @click.option('--with_validation_error_handling', default=False, help='Use validation error handling')
 @click.option('--schema_type', default='json_schema', help='Schema to use - json_schema, json_schema_no_type or compact')
 @click.option('--replace_example_values', default=True, help='Replace example values with known attribute values')
@@ -40,7 +39,7 @@ from pieutils.pydantic_models import ProductCategory
 @click.option('--description', default=False, help = 'Include description')
 @click.option('--normalization_params', default="['Name Expansion', 'Numeric Standardization', 'To Uppercase', 'Substring Extraction', 'Product Type Generalisation', 'Unit Conversion', 'Color Generalization', 'Binary Classification', 'Name Generalisation','Unit Expansion', 'To Uppercase', 'Delete Marks']", help = 'Which normalizations should be included')
 @click.option('--normalized_only', default=True, help = 'Extract only attributes that are viable for normalization')
-def main(dataset, model, verbose, with_containment, with_validation_error_handling, schema_type, replace_example_values, train_percentage, no_example_values, title, description,normalization_params, normalized_only):
+def main(dataset, model, verbose, with_validation_error_handling, schema_type, replace_example_values, train_percentage, no_example_values, title, description,normalization_params, normalized_only):
     # Load task template
     with open('../prompts/task_template.json', 'r') as f:
         task_dict = json.load(f)
@@ -165,19 +164,6 @@ def main(dataset, model, verbose, with_containment, with_validation_error_handli
         verbose=verbose
     )
 
-    # Containment chain:
-    ai_response = AIMessagePromptTemplate.from_template("{response}")
-    human_verfification_request = HumanMessagePromptTemplate.from_template(
-        'The attribute value(s) "{values}" is/are not found as exact substrings in the product title "{input}". Update all attribute values such that they are substrings of the product title.')
-    verification_prompt_list = [system_message_prompt, human_task_prompt, human_message_prompt, ai_response,
-                                human_verfification_request]
-    verification_prompt = ChatPromptTemplate(messages=verification_prompt_list)
-    verification_chain = LLMChain(
-        prompt=verification_prompt,
-        llm=default_llm,
-        verbose=verbose
-    )
-
     # Error handling chain:
     ai_response = AIMessagePromptTemplate.from_template("{response}")
     human_error_handling_request = HumanMessagePromptTemplate.from_template("Change the attributes '{error}' to string values. List values should be concatenated by ' '.")
@@ -211,7 +197,7 @@ def main(dataset, model, verbose, with_containment, with_validation_error_handli
 
         return pred, error_handling_response
 
-    def select_and_run_llm(category, input_text, part='title', updated_schemas=updated_schemas, with_validation_error_handling=with_validation_error_handling, with_containment=with_containment, schema_type='json_schema'):
+    def select_and_run_llm(category, input_text, part='title', updated_schemas=updated_schemas, with_validation_error_handling=with_validation_error_handling, schema_type='json_schema'):
         pred = None
 
         guidelines = get_normalization_guidelines_from_csv(normalization_params, category, normalized_only)
@@ -250,35 +236,6 @@ def main(dataset, model, verbose, with_containment, with_validation_error_handli
                 print('Response: ')
                 print(response)
 
-            if pred is not None and with_containment:
-                # Verify if the extracted attribute values are contained in the input text and make sure that no loop is entered.
-                not_found_values = [v for v in pred.dict().values() if v is not None and v != 'n/a' and v not in input_text]
-                print("Not found values:")
-                print(not_found_values)
-                previous_responses = []
-                while len(not_found_values) > 0 and response not in previous_responses:
-                    # Verify extracted attribute values
-                    if verbose:
-                        print('Not found values: {}'.format(not_found_values))
-                    # Try this only once to avoid infinite loops
-                    verified_response = verification_chain.run(input=input_text,
-                                                            schema=convert_to_json_schema(pydantic_models[category]),
-                                                            response=response, values='", "'.join(not_found_values),
-                                                            part=part)
-                    previous_responses.append(response)
-                    try:
-                        if verbose:
-                            print(json.loads(verified_response))
-                        pred = pydantic_models[category](**json.loads(verified_response))
-                        not_found_values = [v for v in pred.dict().values() if
-                                            v is not None and v != 'n/a' and v not in input_text]
-                    except ValidationError as valError:
-                        if with_validation_error_handling:
-                            pred, verified_response = validation_error_handling(category, input_text, verified_response, valError, part)
-                        else:
-                            print('Validation Error: {}'.format(valError))
-                    except JSONDecodeError as e:
-                        print('Error: {}'.format(e))
         except Exception as e:
             print(f"Exception: {e}")
         return pred
