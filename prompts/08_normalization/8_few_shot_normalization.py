@@ -117,7 +117,6 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, tit
     def select_and_run_llm(category, input_text, part='title', url=None):
 
         guidelines = get_normalization_guidelines_from_csv(normalization_params, category, normalized_only)
-        print(guidelines)
 
         pred = None
         try:

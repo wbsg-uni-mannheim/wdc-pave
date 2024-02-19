@@ -202,8 +202,6 @@ def main(dataset, model, verbose, with_validation_error_handling, schema_type, r
 
         guidelines = get_normalization_guidelines_from_csv(normalization_params, category, normalized_only)
 
-        print(guidelines)
-
         try:
             updated_schema = updated_schemas[category]
             response = chain.run(input=input_text, schema=updated_schema, part=part, guidelines=guidelines)
