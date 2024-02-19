@@ -1,0 +1,219 @@
+,Category,Attribute,Datatype,Count,Relative Frequency
+0,Computers And Accessories,Manufacturer,Abbreviated And Full Name,26,0.04
+1,Computers And Accessories,Manufacturer,Abbreviated Name,459,0.72
+2,Computers And Accessories,Manufacturer,Name,134,0.21
+3,Computers And Accessories,Manufacturer,n/a,15,0.02
+4,Computers And Accessories,Generation,Abbreviated Name with Numeric,231,0.49
+5,Computers And Accessories,Generation,Name with Numeric,2,0.0
+6,Computers And Accessories,Generation,n/a,243,0.51
+7,Computers And Accessories,Part Number,Unique Alphanumeric ID,73,0.16
+8,Computers And Accessories,Part Number,Unique Alphanumeric ID with marks,217,0.47
+9,Computers And Accessories,Part Number,Unique Numeric ID,16,0.03
+10,Computers And Accessories,Part Number,Unique Numeric ID with marks,148,0.32
+11,Computers And Accessories,Part Number,n/a,4,0.01
+12,Computers And Accessories,Capacity,Numeric with Unit,452,0.71
+13,Computers And Accessories,Capacity,n/a,189,0.29
+14,Computers And Accessories,Product Type,Free Text,582,0.96
+15,Computers And Accessories,Product Type,n/a,24,0.04
+16,Computers And Accessories,Interface,Abbreviated And Full Name,97,0.16
+17,Computers And Accessories,Interface,Abbreviated Name,258,0.42
+18,Computers And Accessories,Interface,Abbreviated Name with Numeric,63,0.1
+19,Computers And Accessories,Interface,Name,18,0.03
+20,Computers And Accessories,Interface,n/a,175,0.29
+21,Computers And Accessories,Cache,Numeric,2,0.0
+22,Computers And Accessories,Cache,Numeric with Unit,72,0.16
+23,Computers And Accessories,Cache,n/a,363,0.83
+24,Computers And Accessories,Ports,Free Text with Number as Word,144,0.29
+25,Computers And Accessories,Ports,Free Text with Numeric,13,0.03
+26,Computers And Accessories,Ports,n/a,345,0.69
+27,Computers And Accessories,Processor Core,Free Text with Number as Word,11,0.03
+28,Computers And Accessories,Processor Core,Free Text with Numeric,30,0.07
+29,Computers And Accessories,Processor Core,n/a,396,0.91
+30,Computers And Accessories,Processor Type,Name,29,0.06
+31,Computers And Accessories,Processor Type,Name With Numeric,79,0.17
+32,Computers And Accessories,Processor Type,n/a,362,0.77
+33,Computers And Accessories,Processor Quantity,Numeric,33,0.08
+34,Computers And Accessories,Processor Quantity,n/a,403,0.92
+35,Computers And Accessories,Bus Speed,Numeric with Unit,8,0.02
+36,Computers And Accessories,Bus Speed,n/a,428,0.98
+37,Computers And Accessories,Thermal Design Power,Numeric with Unit,34,0.08
+38,Computers And Accessories,Thermal Design Power,n/a,402,0.92
+39,Computers And Accessories,Clock Speed,Numeric,2,0.0
+40,Computers And Accessories,Clock Speed,Numeric with Unit,105,0.23
+41,Computers And Accessories,Clock Speed,n/a,351,0.77
+42,Computers And Accessories,Rotational Speed,Numeric (abbrevaited),178,0.39
+43,Computers And Accessories,Rotational Speed,Numeric with Unit,20,0.04
+44,Computers And Accessories,Rotational Speed,n/a,256,0.56
+45,Home And Garden,Manufacturer,Abbreviated And Full Name,2,0.01
+46,Home And Garden,Manufacturer,Abbreviated Name,10,0.03
+47,Home And Garden,Manufacturer,Name,359,0.97
+48,Home And Garden,Product Type,Free Text,610,1.0
+49,Home And Garden,Width,Numeric,24,0.06
+50,Home And Garden,Width,Numeric with Decimal,1,0.0
+51,Home And Garden,Width,Numeric with Decimal with Unit,8,0.02
+52,Home And Garden,Width,Numeric with Fraction,7,0.02
+53,Home And Garden,Width,Numeric with Fraction with Unit,40,0.1
+54,Home And Garden,Width,Numeric with Unit,179,0.47
+55,Home And Garden,Width,n/a,122,0.32
+56,Home And Garden,Length,Numeric,7,0.02
+57,Home And Garden,Length,Numeric with Decimal with Unit,5,0.01
+58,Home And Garden,Length,Numeric with Fraction,1,0.0
+59,Home And Garden,Length,Numeric with Fraction with Unit,16,0.04
+60,Home And Garden,Length,Numeric with Unit,146,0.37
+61,Home And Garden,Length,n/a,217,0.55
+62,Home And Garden,Depth,Numeric,5,0.01
+63,Home And Garden,Depth,Numeric with Decimal with Unit,3,0.01
+64,Home And Garden,Depth,Numeric with Fraction,4,0.01
+65,Home And Garden,Depth,Numeric with Fraction with Unit,20,0.06
+66,Home And Garden,Depth,Numeric with Unit,60,0.17
+67,Home And Garden,Depth,n/a,270,0.75
+68,Home And Garden,Gauge,Numeric,87,0.24
+69,Home And Garden,Gauge,Numeric with Unit,2,0.01
+70,Home And Garden,Gauge,n/a,269,0.75
+71,Home And Garden,Material,Free Text,467,0.87
+72,Home And Garden,Material,Free Text with Numeric,3,0.01
+73,Home And Garden,Material,n/a,68,0.13
+74,Home And Garden,Stainless Steel Series,Numeric,87,0.24
+75,Home And Garden,Stainless Steel Series,n/a,269,0.76
+76,Home And Garden,Cooling,Free Text,25,0.07
+77,Home And Garden,Cooling,Free Text with Numeric,10,0.03
+78,Home And Garden,Cooling,n/a,332,0.9
+79,Home And Garden,Splash,Free Text,22,0.06
+80,Home And Garden,Splash,Free Text with Numeric and Unit,60,0.16
+81,Home And Garden,Splash,n/a,287,0.78
+82,Home And Garden,Shape,Free Text,89,0.23
+83,Home And Garden,Shape,n/a,302,0.77
+84,Home And Garden,Height,Free Text,5,0.01
+85,Home And Garden,Height,Numeric,5,0.01
+86,Home And Garden,Height,Numeric with Decimal,1,0.0
+87,Home And Garden,Height,Numeric with Decimal with Unit,5,0.01
+88,Home And Garden,Height,Numeric with Fraction,9,0.02
+89,Home And Garden,Height,Numeric with Fraction with Unit,39,0.11
+90,Home And Garden,Height,Numeric with Unit,72,0.2
+91,Home And Garden,Height,n/a,227,0.63
+92,Home And Garden,Color,Free Text,168,0.43
+93,Home And Garden,Color,n/a,225,0.57
+94,Home And Garden,Retail UPC,Unique Numeric ID,28,0.08
+95,Home And Garden,Retail UPC,n/a,328,0.92
+96,Home And Garden,Manufacturer Stock Number,Unique Alphanumeric ID,156,0.43
+97,Home And Garden,Manufacturer Stock Number,Unique Alphanumeric ID with marks,160,0.44
+98,Home And Garden,Manufacturer Stock Number,Unique Numeric ID,7,0.02
+99,Home And Garden,Manufacturer Stock Number,Unique Numeric ID with marks,8,0.02
+100,Home And Garden,Manufacturer Stock Number,n/a,34,0.09
+101,Home And Garden,Heat,Free Text,59,0.16
+102,Home And Garden,Heat,n/a,318,0.84
+103,Home And Garden,Shelves,Number as Word,1,0.0
+104,Home And Garden,Shelves,Numeric,29,0.08
+105,Home And Garden,Shelves,n/a,326,0.92
+106,Home And Garden,Base,Free Text,99,0.25
+107,Home And Garden,Base,n/a,291,0.75
+108,Home And Garden,Voltage,Numeric,5,0.01
+109,Home And Garden,Voltage,Numeric with Unit,33,0.09
+110,Home And Garden,Voltage,n/a,320,0.89
+111,Home And Garden,Capacity,Free Text,3,0.01
+112,Home And Garden,Capacity,Free Text and Numeric with Unit,23,0.06
+113,Home And Garden,Capacity,Free Text with Numeric,27,0.07
+114,Home And Garden,Capacity,Numeric,1,0.0
+115,Home And Garden,Capacity,Numeric with Unit,109,0.27
+116,Home And Garden,Capacity,n/a,238,0.59
+117,Office Products,Product Type,Free Text,476,1.0
+118,Office Products,Brand,Abbreviated Name,15,0.05
+119,Office Products,Brand,Name,304,0.95
+120,Office Products,Brand,n/a,1,0.0
+121,Office Products,Color(s),Free Text,342,0.91
+122,Office Products,Color(s),n/a,35,0.09
+123,Office Products,Retail UPC,Unique Numeric ID,135,0.45
+124,Office Products,Retail UPC,n/a,162,0.55
+125,Office Products,Manufacturer Stock Number,Unique Alphanumeric ID,283,0.95
+126,Office Products,Manufacturer Stock Number,Unique Alphanumeric ID with marks,8,0.03
+127,Office Products,Manufacturer Stock Number,Unique Numeric ID,4,0.01
+128,Office Products,Manufacturer Stock Number,n/a,4,0.01
+129,Office Products,Pack Quantity,Free Text,7,0.02
+130,Office Products,Pack Quantity,Free Text with Numeric,227,0.61
+131,Office Products,Pack Quantity,Numeric,12,0.03
+132,Office Products,Pack Quantity,n/a,125,0.34
+133,Office Products,Material,Free Text,272,0.65
+134,Office Products,Material,Free Text with Numeric,31,0.07
+135,Office Products,Material,n/a,114,0.27
+136,Office Products,Width,Numeric,72,0.22
+137,Office Products,Width,Numeric with Decimal,3,0.01
+138,Office Products,Width,Numeric with Decimal with Unit,4,0.01
+139,Office Products,Width,Numeric with Fraction,76,0.23
+140,Office Products,Width,Numeric with Fraction with Unit,24,0.07
+141,Office Products,Width,Numeric with Unit,35,0.11
+142,Office Products,Width,n/a,115,0.35
+143,Office Products,Height,Numeric,88,0.28
+144,Office Products,Height,Numeric with Decimal with Unit,1,0.0
+145,Office Products,Height,Numeric with Fraction,47,0.15
+146,Office Products,Height,Numeric with Fraction with Unit,13,0.04
+147,Office Products,Height,Numeric with Unit,23,0.07
+148,Office Products,Height,n/a,148,0.46
+149,Office Products,Mounting,Free Text,34,0.11
+150,Office Products,Mounting,n/a,270,0.89
+151,Office Products,Length,Numeric,3,0.01
+152,Office Products,Length,Numeric with Decimal with Unit,2,0.01
+153,Office Products,Length,Numeric with Fraction,5,0.02
+154,Office Products,Length,Numeric with Fraction with Unit,3,0.01
+155,Office Products,Length,Numeric with Unit,17,0.06
+156,Office Products,Length,n/a,269,0.9
+157,Office Products,Binding,Free Text,54,0.17
+158,Office Products,Binding,n/a,255,0.83
+159,Office Products,Closure,Free Text,38,0.12
+160,Office Products,Closure,n/a,270,0.88
+161,Office Products,Depth,Numeric,12,0.04
+162,Office Products,Depth,Numeric with Fraction,10,0.03
+163,Office Products,Depth,Numeric with Fraction with Unit,12,0.04
+164,Office Products,Depth,Numeric with Unit,5,0.02
+165,Office Products,Depth,n/a,263,0.87
+166,Office Products,Paper Weight,Numeric with Unit,28,0.09
+167,Office Products,Paper Weight,n/a,272,0.91
+168,Office Products,Sheet Perforation,Free Text,14,0.05
+169,Office Products,Sheet Perforation,n/a,284,0.95
+170,Office Products,Capacity,Free Text,2,0.01
+171,Office Products,Capacity,Free Text and Numeric with Unit,3,0.01
+172,Office Products,Capacity,Free Text with Numeric,39,0.12
+173,Office Products,Capacity,Numeric,9,0.03
+174,Office Products,Capacity,Numeric with Unit,8,0.03
+175,Office Products,Capacity,n/a,252,0.81
+176,Office Products,Page Yield,Numeric,18,0.06
+177,Office Products,Page Yield,Numeric (abbrevaited),4,0.01
+178,Office Products,Page Yield,n/a,281,0.93
+179,Grocery And Gourmet Food,Brand,Name,86,1.0
+180,Grocery And Gourmet Food,Product Type,Free Text,157,1.0
+181,Grocery And Gourmet Food,Packing Type,Free Text,111,0.83
+182,Grocery And Gourmet Food,Packing Type,n/a,22,0.17
+183,Grocery And Gourmet Food,Flavor,Free Text,65,0.67
+184,Grocery And Gourmet Food,Flavor,n/a,32,0.33
+185,Grocery And Gourmet Food,Size/Weight,Numeric,1,0.01
+186,Grocery And Gourmet Food,Size/Weight,Numeric with Decimal with Unit,29,0.32
+187,Grocery And Gourmet Food,Size/Weight,Numeric with Fraction with Unit,8,0.09
+188,Grocery And Gourmet Food,Size/Weight,Numeric with Unit,29,0.32
+189,Grocery And Gourmet Food,Size/Weight,n/a,23,0.26
+190,Grocery And Gourmet Food,Pack Quantity,Free Text,3,0.03
+191,Grocery And Gourmet Food,Pack Quantity,Free Text with Numeric,53,0.61
+192,Grocery And Gourmet Food,Pack Quantity,Numeric,5,0.06
+193,Grocery And Gourmet Food,Pack Quantity,n/a,26,0.3
+194,Grocery And Gourmet Food,Manufacturer Stock Number,Unique Alphanumeric ID,60,0.72
+195,Grocery And Gourmet Food,Manufacturer Stock Number,Unique Alphanumeric ID with marks,2,0.02
+196,Grocery And Gourmet Food,Manufacturer Stock Number,Unique Numeric ID with marks,1,0.01
+197,Grocery And Gourmet Food,Manufacturer Stock Number,n/a,20,0.24
+198,Grocery And Gourmet Food,Retail UPC,Unique Numeric ID,30,0.37
+199,Grocery And Gourmet Food,Retail UPC,n/a,51,0.63
+200,Jewelry,Product Type,Free Text,421,1.0
+201,Jewelry,Gender,Free Text,168,0.6
+202,Jewelry,Gender,n/a,110,0.4
+203,Jewelry,Stones Type,Free Text,80,0.3
+204,Jewelry,Stones Type,n/a,183,0.7
+205,Jewelry,Stone Shape,Free Text,63,0.25
+206,Jewelry,Stone Shape,n/a,187,0.75
+207,Jewelry,Stones Setting,Free Text,69,0.28
+208,Jewelry,Stones Setting,n/a,181,0.72
+209,Jewelry,Metal Type,Free Text,51,0.19
+210,Jewelry,Metal Type,Free Text with Numeric,175,0.66
+211,Jewelry,Metal Type,n/a,40,0.15
+212,Jewelry,Stones Total Weight,Numeric with Unit,11,0.04
+213,Jewelry,Stones Total Weight,n/a,239,0.96
+214,Jewelry,Brand,Name,251,1.0
+215,Jewelry,Model Number,Unique Alphanumeric ID,172,0.68
+216,Jewelry,Model Number,Unique Alphanumeric ID with marks,65,0.26
+217,Jewelry,Model Number,n/a,15,0.06
