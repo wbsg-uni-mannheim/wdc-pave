@@ -113,17 +113,17 @@ def convert_rotational_speed_to_numeric(value):
     return value";"[""Numeric"", ""Numeric with Unit""]";Numeric;12;56,39;15K, 5.4K, 7.2K RPM, 10000RPM, 7.2K, 7200 RPM, n/a, 10K, 5400 RPM, 5.9K, 7200RPM, 5900RPM
 Home And Garden;The 'Home and Garden' category contains products related to the daily household and garden use, especially Kitchen ware.;Manufacturer;identification;The 'Manufacturer' attribute refers to the company or entity that produces the items from Home and Garden.;* See Manufacturer Computers And Accessories;None;None;None;"[""Name"", ""Abbreviated Name"", ""Abbreviated And Full Name""]";None;111;0;Duke, General Supply, Gojo, Berkel, Focus Foodservice LLC, Hoshizaki, Mayline, Tork, Safco, Jasper Conran at Wedgwood, Montague Company, GE Monogram, Ice-O-Matic, Alto Shaam, Reckitt Benckiser, LYSOL Brand, Pactiv, Vera Wang Wedgwood, Inteplast, Eurodib, Eco-Products, HON, Waring, Royal Industries, Star, Beverage Air, John Boos, Syracuse China, Focus, Ambella Home, Lathem, SC Johnson, Perlick, Scotsman, APW Wyott, Randell, Channel, Montague, Alera, Bush, Jaguar Plastics, Federal, Krowne, Read Right/Advantus, Waterford, Trend Enterprises, Carlisle, Webster, Kimberly-Clark, Monogram, Cadco, AccuTemp, John Rocha at Waterford, Anchor Hocking, Electrolux Professional, Star-Max, MagiKitch'N, Blodgett, Turbo Air, Toastmaster, Crown Mats & Matting, Woodard, Cambro, BALT, Rockefeller, Maytag, Furinno, Better Life, AmRep, Kleenex, Advance Tabco, Follett, Insinger, Delfield, New Age, Vulcan, 3M, Riverside Paper, Equipex, Wedgwood, Rubbermaid Commercial, Royal Albert, San Jamar, Pak-it, MVP Group, Bon Chef, Crescor, Accutemp, Alto-Shaam, Advantus, Sun Products, Edlund, Bunn, Floortex, Chartpak, Ice-O-matic, Garland, PAK-IT, Monique Lhuillier Waterford, Elkay, Southbend, Rubbermaid, HP, Nemco, Bunn-O-Matic, Dinex, Ex-Cell Metal, Zep, Royal Doulton, GOJO, Food Warming Equipment
 Home And Garden;The 'Home and Garden' category contains products related to the daily household and garden use, especially Kitchen ware.;Product Type;identification;The 'Product Type' attribute can be seen as a subcategory of the product.;"* Longest Substring Rule witout adding details about the features or advertisement slang of the product (E.g. ""Gas Range"", not ""2-Burner Gas Range"", ""Worktop Freezer"", not ""Super Deluxe Worktop Freezer"")";[Product Type Generalisation];"Give the product type as EXACTLY ONE of the following:
-'Food and Drink Preparation and Cooking Equipment',
- 'Ice Machines, Bins and Makers',
- 'Food and Beverage Storage, Dispensers, Serving, Display and Refrigeration',
- 'Tableware',
- 'Smokers Equipment',
- 'Dishwashers and related Equipment',
- 'Cleaning, Sinks, Maintenance Equipment and Trash Disposal',
- 'Carts, Dollies and Transportation',
- 'Furniture, Storage, Racks and Fixtures',
- 'Office and Organizational Supplies',
- 'Accessories, Miscellaneous'";"* Food and Drink Preparation and Cooking Equipment: Encompasses a range of items including Charbroilers, Gas Griddles, Convection Steamers, Microwaves, Toasters, Food Slicers, and various other appliances and tools used for cooking or preparing food and drinks in both domestic and commercial settings.
+-Food and Drink Preparation and Cooking Equipment
+-Ice Machines, Bins and Makers
+-Food and Beverage Storage, Dispensers, Serving, Display and Refrigeration
+-Tableware
+-Smokers Equipment
+-Dishwashers and related Equipment
+-Cleaning, Sinks, Maintenance Equipment and Trash Disposal
+-Carts, Dollies and Transportation
+-Furniture, Storage, Racks and Fixtures
+-Office and Organizational Supplies
+-Accessories, Miscellaneous";"* Food and Drink Preparation and Cooking Equipment: Encompasses a range of items including Charbroilers, Gas Griddles, Convection Steamers, Microwaves, Toasters, Food Slicers, and various other appliances and tools used for cooking or preparing food and drinks in both domestic and commercial settings.
 * Ice Machines, Bins and Makers: This category covers equipment related to ice production and storage, such as Modular Cube Ice Makers, Undercounter Ice Machines, Ice Bins with Chute Doors, and other devices designed to produce, store, or dispense ice.
 * Food and Beverage Storage, Dispensers, Serving, Display and Refrigeration: Includes items like Refrigerated Beverage Cabinets, Tea Dispensers, Open Air Coolers, Heated Deli Display Cases, and other refrigeration and serving equipment used to store, display, and serve food and beverages.
 * Tableware: Comprises a variety of dining and serving utensils such as Bread & Butter Plates, Wine Glasses, Mugs, Cutlery, Bowls, and other items essential for table service and food presentation.
@@ -246,7 +246,7 @@ Office Products;The 'Office Products' category typically includes a wide range o
 -Stationery and Desk Accessories
 -Stickers and Badges
 -Time, Planning and Organization 
--Miscellaneous""";"* Writing/Erasing Instruments and Accessories: Includes various pens (rollerball, gel ink, ballpoint), markers, pencils, erasers, correction tape, and sharpeners for all writing and correcting needs.
+-Miscellaneous";"* Writing/Erasing Instruments and Accessories: Includes various pens (rollerball, gel ink, ballpoint), markers, pencils, erasers, correction tape, and sharpeners for all writing and correcting needs.
 * Paper Products: Features a range of paper types such as multipurpose, design, notebook, photo, index cards, and legal pads, suitable for printing, note-taking, and arts.
 * Printing, Copying, Laminating: Covers essential printing and document finishing supplies like ink and toner cartridges, laminating pouches, printers, and copiers.
 * Folders, Dividers, Indexing, Flags, Labels, Cases, Holders, Bindings: All about organization, including expanding files, sheet protectors, dividers, labels, and binding materials for document management.
@@ -406,7 +406,7 @@ Grocery And Gourmet Food;The 'Grocery and Gourmet Food' category encompasses a d
 Grocery And Gourmet Food;The 'Grocery and Gourmet Food' category encompasses a diverse array of edible products ranging from everyday food items and sweets to beverages such as water and tea.;Size/Weight;quantity;The 'Size/Weight' attribute refers to the size of the product, encompassing various aspects such as dimensions, weight, or volume. In the context of liquids, this attribute often includes the fluid capacity measured in ounces (oz).;"* Include all matching surface forms e.g. ""8-1 3/4 oz; 16-1 1/2 oz"" if more than one value in a sequence.";[Unit Conversion];"Convert and standardize Size/Weight measurements to grams (g)
 Round the final value to the nearest full digit.
 Output the final weight value as a single numeric figure in grams, without any unit indicator.
-If the weight is mentioned in a unit other than oz, kg, or lbs (e.g. inches), leave it as is.";"1 oz = 28.3495g
+If the weight is mentioned in a unit other than oz, kg, or lbs (e.g., inches), leave it as is.";"1 oz = 28.3495g
 1 lb = 453.592g
 1kg = 1000g";"[""Free Text"", ""Numeric with Fraction"", ""Numeric with Decimal"", ""Numeric"", ""Numeric with Fraction with Unit"", ""Numeric with Decimal with Unit"", ""Numeric with Unit"", ";Numeric;52;25,56;"16.9 oz, 4/5 oz, 0.8 oz, 12.000 oz, 0.31 oz, 20 oz, 3.08 oz, 8-1 3/4 oz; 16-1 1/2 oz, 1.32 oz., 20oz., 8.4 oz, 1 1/2 oz, 0.18 oz, 14-3/4-oz, 5in, 9oz, 1.7 oz, 1.1 oz/0.95 oz/1.1 oz, 14-3/4 oz., 16 oz, 11 oz., 5 oz, 0.95 oz, 1.59 oz, 12 Ounce, 2.5oz, 2.64oz, 22 oz, n/a, 8.0 oz, 1 g, 1.3oz, 2.5 oz, 1 3/4oz, 1.5 oz, 3 lbs, 12 oz, 10 lb, 1.76 oz, 10lbs, 6in, 1.1 oz, 8 oz, 0.035 oz, 9 oz, 24 oz, 10 oz, 11-1/2 oz., 16oz, 32 oz, 0.1 oz, 2.03 Pound"
 Grocery And Gourmet Food;The 'Grocery and Gourmet Food' category encompasses a diverse array of edible products ranging from everyday food items and sweets to beverages such as water and tea.;Pack Quantity;quantity;The 'Pack Quantity' attribute refers to the number of portions/servings included in the product.;"* Longest Substring Rule: Include not only quanitity of single items, but also of Boxes/Packs etc. if applicable (e.g. ""1 Box per Case. 18 Pods per Box."") ";[Numeric Standardization];Extract the Pack Quantity as a single numeric number. If the Package Quantity is given as a word, extact the correspodnung number in numeric format.;"Consider the following pseudo code which could help you in normalizing the Pack Quantity as a single numeric value:
