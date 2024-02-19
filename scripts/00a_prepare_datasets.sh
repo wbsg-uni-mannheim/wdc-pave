@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/MMDS/wdc-pave/:$PYTHONPATH"
+export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/wdc-pave/:$PYTHONPATH"
 
 # (a) Split to test/train
 #python3 ../preprocessing/prepare_datasets.py --dataset wdc

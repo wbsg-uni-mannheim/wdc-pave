@@ -356,6 +356,7 @@ def main(dataset, model, verbose, with_containment, with_validation_error_handli
                                                                                 task_dict_subset['known_attributes'])
 
         #print(task_dict['results'])
+        print("Performance on attributes which are considered in normalization:")
         print(task_dict_subset['results']['micro'])
 
         task_dict_subset['task_name'] = f"{task_dict['task_name']}_subset"

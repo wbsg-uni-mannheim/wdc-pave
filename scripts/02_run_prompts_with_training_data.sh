@@ -2,9 +2,9 @@
 export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/wdc-pave/:$PYTHONPATH"
 
 datasets=("wdc") 
-model="gpt-3.5-turbo-0613" # "gpt-4-1106-preview" "gpt-3.5-turbo-0613"
-shots=(5)
-train_percentage=( 1.0 ) 
+model="gpt-4-1106-preview" # "gpt-4-1106-preview" "gpt-3.5-turbo-0613"
+shots=(3 5 10)
+train_percentage=( 0.2 ) 
 example_selectors=( "SemanticSimilarity" ) 
 schema_type="list"
 title=True
@@ -12,7 +12,7 @@ description=True
 force_from_different_website=True
 separate=False
 
-## First prompt
+
 for dataset in "${datasets[@]}"
 do
     for shot in "${shots[@]}"

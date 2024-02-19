@@ -1,4 +1,4 @@
-# Attribute Value Extraction using Large Language Models
+# Using LLMs for the Extraction and Normalization of Product Attribute Values
 This repository contains code and data for experiments on attribute value extraction and normalization using large language models.
 
 ## Requirements

@@ -223,7 +223,7 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, tit
         task_dict_subset['results'] = calculate_recall_precision_f1_multiple_attributes(targets, postprocessed_preds, categories,
                                                                                 task_dict_subset['known_attributes'])
 
-        #print(task_dict['results'])
+        print("Performance on attributes which are considered in normalization:")
         print(task_dict_subset['results']['micro'])
 
         task_dict_subset['task_name'] = f"{task_dict['task_name']}_subset"
