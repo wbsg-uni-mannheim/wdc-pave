@@ -2558,7 +2558,13 @@ def normalize_data(split="test", normalization_params = ["String Expansion", "Ca
     for key, values in normalized_attributes.items():
         normalized_attributes[key] = list(set(values)) 
 
-
+    for product in data:  
+        for attribute, values in product['target_scores'].items():  
+            for value_key, value_details in values.items():
+                if isinstance(value_details, dict) and 'pid' in value_details:  
+                    unique_pid_list = list(set(value_details['pid']))
+                    unique_pid_list.sort()  
+                    value_details['pid'] = unique_pid_list
 
     # Remove empty categories
     normalized_attributes = {k: v for k, v in normalized_attributes.items() if v}
