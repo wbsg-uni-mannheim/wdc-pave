@@ -106,6 +106,7 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, tit
     prompt = ChatPromptTemplate(messages=[system_setting, 
                                           human_task_prompt, 
                                           few_shot_prompt,
+                                          human_task_prompt,
                                           human_message_prompt])
 
     chain = LLMChain(
