@@ -161,7 +161,6 @@ equipment_dict_computers = {
         "SDRAM MEMORY"
     ],
     "Racks, Enclosures, and Mounting Solutions": [
-        "Racks, Enclosures, and Mounting Solutions",
         "Rackmount Option Kit",
         "Rack Server",
         "Rack Rail Kit",
@@ -190,7 +189,6 @@ equipment_dict_computers = {
         "Rack"
     ],
     "Data Transfer and Connectivity": [
-        "Data Transfer and Connectivity",
         "CD-RW DVD-ROM",
         "CD-RW DVD-ROM Drive",
         "CD / Floppy Assembly",
@@ -208,7 +206,6 @@ equipment_dict_computers = {
         "Peripheral Brd"
     ],
     "Media and Accessories": [
-        "Media and Accessories",
         "Tape Array",
         "Tape Library",
         "Tape Drive",
@@ -227,7 +224,6 @@ equipment_dict_computers = {
         "Keyboard Monitor Shelf"
     ],
     "Cooling and Thermal Management": [
-        "Cooling and Thermal Management",
         "Cooling",
         "FAN CHASSIS",
         "Heat Sink",
@@ -239,7 +235,6 @@ equipment_dict_computers = {
         "Cooling Fan"
     ],
     "Miscellaneous and Specialized Equipment": [
-        "Miscellaneous and Specialized Equipment",
         "EMU Board Modular Array",
         "Base",
         "Mezzanine Card",
@@ -1596,7 +1591,7 @@ def convert_to_grams(weight_str):
     If the unit is not one of these, the original value is returned.
     Fractions and various formats are also handled.
     """
-
+    
     # Conversion factors
     oz_to_g = 28.3495
     lb_to_g = 453.592
@@ -1615,10 +1610,11 @@ def convert_to_grams(weight_str):
     else:
         # Updated regular expression to handle more formats
         weight_str = weight_str.replace("-", " ")
+        weight_str = weight_str.replace(';', '')
 
-        regex = r'(?:(\d+)\s*)?(?:(\d+)\/(\d+))?\s*(oz|ounce|lbs|lb|pound|pounds|kg|g|in|ounces)?'
+        regex = r'(?:(\d+(?:\.\d+)?)\s*)?(?:(\d+)\/(\d+))?\s*(oz|ounce|lbs|lb|pound|pounds|kg|g|in|ounces)?'
         
-        matches = re.match(regex, weight_str.lower().replace(';', '').replace('.', ''))
+        matches = re.match(regex, weight_str)
 
         if not matches:
             return weight_str  # Return original string if no match
@@ -2571,9 +2567,9 @@ def normalize_data(split="test", normalization_params = ["String Expansion", "Ca
         for example in data:
             f.write(json.dumps(example) + "\n")
     
-    #name = f"normalized_{split}"
-    #with open(os.path.join("../data/processed_datasets/wdc/normalized/", f"{name}.jsonl", encoding='utf-8'), "w") as f:
-    #    for example in data:
-    #        f.write(json.dumps(example) + "\n")
+    name = f"normalized_{split}"
+    with open(os.path.join("../data/processed_datasets/wdc/normalized/", f"{name}.jsonl"), "w", encoding='utf-8') as f:
+        for example in data:
+            f.write(json.dumps(example) + "\n")
 
     return normalized_attributes
