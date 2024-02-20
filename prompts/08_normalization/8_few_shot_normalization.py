@@ -27,7 +27,7 @@ from pieutils.normalization import normalize_data
 @click.command()
 @click.option('--shots', default=3, help='Number of shots for few-shot learning')
 @click.option('--example_selector', default='MaxMarginalRelevance', help='Example selector for few-shot learning')
-@click.option('--dataset', default='oa-mine', help='Dataset Name')
+@click.option('--dataset', default='wdc', help='Dataset Name')
 @click.option('--model', default='gpt-3.5-turbo-0613', help='Model name')
 @click.option('--verbose', default=True, help='Verbose mode')
 @click.option('--train_percentage', default=1.0, help='Percentage of training data used for example value selection')
@@ -37,6 +37,7 @@ from pieutils.normalization import normalize_data
 @click.option('--normalized_only', default=True, help = 'Extract only attributes that are viable for normalization')
 @click.option('--force_from_different_website', default=False, help = 'For WDC Data, ensures that shots come from different url')
 def main(dataset, model, verbose, shots, example_selector, train_percentage, title, description, normalization_params, normalized_only, force_from_different_website):
+    
     # Load task template
     with open('../prompts/task_template.json', 'r') as f:
         task_dict = json.load(f)
