@@ -22,7 +22,7 @@ do
       do
         for example_selector in "${example_selectors[@]}"
         do
-          python3 ../prompts/5_in-context_learning/in_context_list.py --dataset $dataset --shots $shots --model $model --train_percentage $train_percentage --example_selector $example_selector --title $title --description $description --force_from_different_website $force_from_different_website --separate $separate
+          python3 ../prompts/5_in-context_learning/in_context_list.py --dataset $dataset --shots $shot --model $model --train_percentage $train_percentage --example_selector $example_selector --title $title --description $description --force_from_different_website $force_from_different_website --separate $separate
         done
       done
     done
