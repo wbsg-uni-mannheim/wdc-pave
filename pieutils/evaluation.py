@@ -450,36 +450,38 @@ def evaluate_predictions_with_data_types(task_dict):
     cat_attr_dtype_eval_dict = defaultdict(lambda: {'NN': 0, 'NV': 0, 'VN': 0, 'VC': 0, 'VW': 0, 'total': 0})
 
     for example in task_dict['examples']:
-        predictions = json.loads(example['post_pred'])
+        preds = example['post_pred']
+        if preds:
+            predictions = json.loads(example['post_pred'])
 
-        for attribute, target_values in example['target_scores'].items():
-            predicted_value = predictions.get(attribute, None)
-            predicted_value = None if predicted_value in ['n/a', None] else predicted_value
-            category = example['category']
+            for attribute, target_values in example['target_scores'].items():
+                predicted_value = predictions.get(attribute, None)
+                predicted_value = None if predicted_value in ['n/a', None] else predicted_value
+                category = example['category']
 
-            actual_value_exists = any(value != 'n/a' for value in target_values)
-            match_found = False
+                actual_value_exists = any(value != 'n/a' for value in target_values)
+                match_found = False
 
-            for value, data_type in target_values.items():
-                if value != 'n/a' and predicted_value == value:
-                    match_found = True
-                    # Update counts using the data type of the matched value
-                    update_counts('VC', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, data_type, category, attribute)
-                    break  # Correct prediction found, no need to check other values
+                for value, data_type in target_values.items():
+                    if value != 'n/a' and predicted_value == value:
+                        match_found = True
+                        # Update counts using the data type of the matched value
+                        update_counts('VC', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, data_type, category, attribute)
+                        break  # Correct prediction found, no need to check other values
 
-            if not match_found:
-                if predicted_value is None and not actual_value_exists:
-                    # NN Scenario
-                    update_counts('NN', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, None, category, attribute)
-                elif predicted_value is None and actual_value_exists:
-                    # VN Scenario
-                    update_counts_for_all_data_types('VN', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, target_values, category, attribute)
-                elif predicted_value is not None and not actual_value_exists:
-                    # NV Scenario
-                    update_counts('NV', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, None, category, attribute)
-                else:
-                    # VW Scenario
-                    update_counts_for_all_data_types('VW', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, target_values, category, attribute)
+                if not match_found:
+                    if predicted_value is None and not actual_value_exists:
+                        # NN Scenario
+                        update_counts('NN', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, None, category, attribute)
+                    elif predicted_value is None and actual_value_exists:
+                        # VN Scenario
+                        update_counts_for_all_data_types('VN', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, target_values, category, attribute)
+                    elif predicted_value is not None and not actual_value_exists:
+                        # NV Scenario
+                        update_counts('NV', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, None, category, attribute)
+                    else:
+                        # VW Scenario
+                        update_counts_for_all_data_types('VW', overall_eval_dict, data_type_eval_dict, cat_attr_dtype_eval_dict, target_values, category, attribute)
 
     def calculate_metrics(eval_dict):
         precision = eval_dict['VC'] / (eval_dict['NV'] + eval_dict['VC'] + eval_dict['VW']) if eval_dict['NV'] + eval_dict['VC'] + eval_dict['VW'] else 0
@@ -614,6 +616,7 @@ def evaluate_normalization_performance(task_name, converted_results):
     directory_path = f"../data/descriptions/wdc/descriptions.csv"
     descriptions_csv = pd.read_csv(directory_path, sep=";")
     descriptions_csv["Normalization_params"] = descriptions_csv["Normalization_params"].str.strip("[]").str.replace("'", "")
+    descriptions_csv["Normalization_params_general"] = descriptions_csv["Normalization_params_general"].str.strip("[]").str.replace("'", "")
 
     performance_data = []
     for key, values in converted_results["by_category_attribute_datatype"].items():
@@ -634,7 +637,7 @@ def evaluate_normalization_performance(task_name, converted_results):
     merged_df = pd.merge(performance_df, descriptions_csv, on=["Category", "Attribute"])
 
     # Calculate weighted metrics
-    weighted_metrics = merged_df.groupby("Normalization_params").apply(lambda x: 
+    weighted_metrics = merged_df.groupby("Normalization_params_general").apply(lambda x: 
         pd.Series({
             "F1_mean": np.average(x['F1'], weights=x['Total']),
             "F1_std": np.sqrt(np.cov(x['F1'], aweights=x['Total'])),
@@ -690,7 +693,7 @@ def evaluate_normalization_performance(task_name, converted_results):
     ax.set_xlabel('Scores')
     ax.set_title('Model Performance by Normalization Operation')
     ax.set_yticks(ind)
-    ax.set_yticklabels(weighted_metrics['Normalization_params'].values)  # Ensure this line matches your DataFrame structure
+    ax.set_yticklabels(weighted_metrics['Normalization_params_general'].values)  # Ensure this line matches your DataFrame structure
 
     ax.legend()
 
@@ -716,11 +719,11 @@ def evaluate_normalization_performance(task_name, converted_results):
     results_df = pd.DataFrame(data)
     results_df = pd.merge(results_df, descriptions_csv, on=["Category", "Attribute"])
 
-    results_df = results_df.sort_values(by=['Normalization_params', 'F1'], ascending=[True, False])
+    results_df = results_df.sort_values(by=['Normalization_params_general', 'F1'], ascending=[True, False])
     
     #print(results_df)
         
-    unique_operations = results_df['Normalization_params'].unique()
+    unique_operations = results_df['Normalization_params_general'].unique()
     n_operations = len(unique_operations)
 
     fig, axes = plt.subplots(nrows=n_operations, figsize=(10, 5 * n_operations))
@@ -729,7 +732,7 @@ def evaluate_normalization_performance(task_name, converted_results):
         axes = [axes]
 
     for ax, operation in zip(axes, unique_operations):
-        filtered_df = results_df[results_df['Normalization_params'] == operation].reset_index(drop=True)
+        filtered_df = results_df[results_df['Normalization_params_general'] == operation].reset_index(drop=True)
         
         # Sort and prepare custom labels
         sorted_df = filtered_df.sort_values(by=['Category', 'Attribute', 'Data Type'])
@@ -760,6 +763,60 @@ def evaluate_normalization_performance(task_name, converted_results):
     plt.savefig(f'../figures/normalization/{task_name}_performance_normalization_by_operation.svg')
     plt.close()
 
+import copy
 
+def evaluate_normalization_performance_one_by_one(original_task_dict):
+    directory_path = f"../data/descriptions/wdc/descriptions.csv"
+    descriptions_csv = pd.read_csv(directory_path, sep=";")
+    descriptions_csv["Normalization_params"] = descriptions_csv["Normalization_params"].str.strip("[]").str.replace("'", "")
+    descriptions_csv["Normalization_params_general"] = descriptions_csv["Normalization_params_general"].str.strip("[]").str.replace("'", "")
+
+    # Filter out rows where Normalization_instruction is not null
+    descriptions_csv = descriptions_csv[descriptions_csv['Normalization_params_general'].notnull()]
+
+    # Get unique normalization parameters
+    unique_normalization_params = descriptions_csv['Normalization_params_general'].unique()
+
+    for normalization_param in unique_normalization_params:
+        # Make a deep copy of the task_dict for each normalization parameter
+        task_dict = copy.deepcopy(original_task_dict)
+
+        # Filter attributes based on the current normalization parameter
+        filtered_attributes = descriptions_csv[descriptions_csv['Normalization_params_general'] == normalization_param]
+
+        category_attributes_with_guideline = {}
+        for index, row in filtered_attributes.iterrows():
+            category = row['Category']
+            attribute = row['Attribute']
+            if category not in category_attributes_with_guideline:
+                category_attributes_with_guideline[category] = []
+            if attribute not in category_attributes_with_guideline[category]:
+                category_attributes_with_guideline[category].append(attribute)
+
+        # Filter the task_dict based on the current normalization parameter
+        for category, attributes in task_dict['known_attributes'].items():
+            if category in category_attributes_with_guideline:
+                task_dict['known_attributes'][category] = [attr for attr in attributes if attr in category_attributes_with_guideline[category]]
+            else:
+                task_dict['known_attributes'][category] = []
+
+        # Assuming you have a function to filter examples based on valid attributes
+        # This part of the code should remain similar to your original logic, adjusting targets and predictions accordingly
+
+        targets = [example['target_scores'] for example in task_dict['examples']]
+        preds = [json.loads(pred) if pred else {} for pred in [example['pred'] for example in task_dict['examples']]]
+        categories = [example['category'] for example in task_dict['examples']]
+        
+        # Adjust predictions to only include valid attributes for the current normalization parameter
+        postprocessed_preds = [json.dumps({attr: value for attr, value in pred.items() if attr in category_attributes_with_guideline.get(example['category'], [])}) for pred, example in zip(preds, task_dict['examples'])]
+
+        # Update examples with filtered predictions
+        task_dict['examples'] = [combine_example(example, pred, post_pred)
+                                for example, pred, post_pred in zip(task_dict['examples'], postprocessed_preds, postprocessed_preds)]
+
+        # Calculate and print performance metrics for the current normalization parameter
+        results = calculate_recall_precision_f1_multiple_attributes(targets, postprocessed_preds, categories, task_dict['known_attributes'])
+        print(f"Evaluating performance for normalization parameter: {normalization_param}")
+        print(results['micro'])  # Adjust according to your metrics structure
 
 
