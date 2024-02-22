@@ -84,8 +84,8 @@ def main(dataset, model, verbose, title, description, separate):
         except JSONDecodeError as e:
             #converted_response = parse_llm_response_to_json(response)
             cleaned_response_str = response.replace("```json\n", "").replace("\n```", "")
-            cleaned_response = json.loads(cleaned_response_str)
             try:
+                cleaned_response = json.loads(cleaned_response_str)
                 pred = pydantic_models[category](**cleaned_response)
             except ValidationError as valError:
                 print(valError)
