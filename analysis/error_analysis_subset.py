@@ -33,6 +33,6 @@ def error_analysis(path_task_dict, from_normalized):
     save_populated_task_to_json(task_dict_subset['task_name'], task_dict, title=True, description=True)
 
 if "__main__" == __name__:
-    path_task_dict = "../prompts/runs/.json"
+    path_task_dict = "../prompts/runs/"
     from_normalized = False
     error_analysis(path_task_dict, from_normalized)

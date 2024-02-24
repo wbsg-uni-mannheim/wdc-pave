@@ -431,41 +431,47 @@ for product in data_list:
 
 aggregate_table = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
 total_counts = defaultdict(int)
+unique_values_per_attribute = defaultdict(lambda: defaultdict(set))
 
 for data in data_list:
     category = data['category']
     attributes = data['target_scores']
     for attribute, values in attributes.items():
-        for value_data in values.values():
-            if values != {"n/a": 1}:
-                datatype = value_data.get('datatype', 'n/a')
-                aggregate_table[category][attribute][datatype] += 1
-                total_counts[(category, attribute)] += 1
-            else:
-                aggregate_table[category][attribute]["n/a"] += 1
-                total_counts[(category, attribute)] += 1
+        if values != {"n/a": 1}:
+            for value_key, value_data in values.items():
+                if 'pid' in value_data: 
+                    datatype = value_data.get('datatype', 'n/a')
+                    aggregate_table[category][attribute][datatype] += 1
+                    total_counts[(category, attribute)] += 1
+                    unique_values_per_attribute[category][attribute].add(value_key)
+        else:
+            aggregate_table[category][attribute]["n/a"] += 1
+            total_counts[(category, attribute)] += 1
+            unique_values_per_attribute[category][attribute].add("n/a")
 
+# Printing aggregated data with unique value counts
 for category, attributes in aggregate_table.items():
     print(f'Category: {category}')
     for attribute, datatypes in attributes.items():
         print(f'  Attribute: {attribute}')
+        unique_values_count = len(unique_values_per_attribute[category][attribute])
+        print(f'    Unique Values: {unique_values_count}')
         for datatype, count in datatypes.items():
             relative_frequency = count / total_counts[(category, attribute)]
             print(f'    {datatype}: {count} (Relative Frequency: {relative_frequency:.2%})')
 
-
+# Preparing DataFrame data
 category_list = []
 attribute_list = []
 datatype_list = []
 count_list = []
 relative_frequency_list = []
-
-def custom_sort(datatype):
-    return (datatype == "n/a", datatype)
+unique_values_count_list = []
 
 for category, attributes in aggregate_table.items():
     for attribute, datatypes in attributes.items():
-        sorted_datatypes = sorted(datatypes.items(), key=lambda x: custom_sort(x[0]))
+        sorted_datatypes = sorted(datatypes.items(), key=lambda x: (x[0] == "n/a", x[0]))
+        unique_values_count = len(unique_values_per_attribute[category][attribute])
         for datatype, count in sorted_datatypes:
             category_list.append(category)
             attribute_list.append(attribute)
@@ -473,6 +479,7 @@ for category, attributes in aggregate_table.items():
             count_list.append(count)
             relative_frequency = count / total_counts[(category, attribute)]
             relative_frequency_list.append(relative_frequency)
+            unique_values_count_list.append(unique_values_count)
 
 data = {
     "Category": category_list,
@@ -480,9 +487,15 @@ data = {
     "Datatype": datatype_list,
     "Count": count_list,
     "Relative Frequency": relative_frequency_list,
+    "Unique Values": unique_values_count_list,
 }
 
 df = pd.DataFrame(data)
+
+grouped_df = df.groupby("Category").sum("Unique Values")
+
+print(grouped_df)
+print(df['Unique Values'].sum())
 
 df["Relative Frequency"] = round(df["Relative Frequency"], 2)
 

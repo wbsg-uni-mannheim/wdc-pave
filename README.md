@@ -18,7 +18,19 @@ pip install pieutils/
 ```
 
 ## Dataset
-
-
+The extraction and extraction&normalization WDC PAVE data can be found in the data/processed_datasets folder.
 
 ## Prompts
+We experiment with various prompt templates involving descriptions and example values, and adding demonstrations. The following figure shows the prompt structures for the two schema descriptions (black font for extraction, black + red font for extraction + normalization).
+
+![Prompt Designs](resources/prompt_template.PNG)
+
+### Execution
+The prompts and the code to execute the prompts are defined in the folder `prompts`.
+You can run the prompts with the following scripts:
+
+```
+scripts/01_run_example_values_prompts.sh
+scripts/02_run_prompts_with_training_data.sh
+scripts/08_run_prompts_for_data_normalization.sh
+```

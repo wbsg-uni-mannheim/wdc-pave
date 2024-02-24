@@ -2,7 +2,7 @@
 export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/wdc-pave/:$PYTHONPATH"
 
 datasets=("wdc") 
-model="gpt-3.5-turbo-0613" # "gpt-4-1106-preview" "gpt-3.5-turbo-0613"
+model="gpt-3.5-turbo-0613" 
 shots=(3 5 10)
 train_percentage=( 0.2 ) 
 example_selectors=( "SemanticSimilarity" ) 

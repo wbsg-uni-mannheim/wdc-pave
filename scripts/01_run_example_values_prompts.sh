@@ -2,7 +2,7 @@
 export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/wdc-pave/:$PYTHONPATH"
 
 datasets=("wdc") 
-models=("gpt-4-1106-preview")  # "gpt-3.5-turbo-0613" "gpt-4-1106-preview"
+models=("gpt-4-1106-preview") 
 schema_types=("json_schema") 
 example_values_counts=(3 5 10)  
 train_percentage=0.2

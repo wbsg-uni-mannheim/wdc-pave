@@ -32,7 +32,7 @@ from pieutils.pydantic_models import ProductCategory
 @click.option('--with_containment', default=False, help='Use containment')
 @click.option('--with_validation_error_handling', default=False, help='Use validation error handling')
 @click.option('--schema_type', default='json_schema', help='Schema to use - json_schema, json_schema_no_type or compact')
-@click.option('--replace_example_values', default=False, help='Replace example values with known attribute values')
+@click.option('--replace_example_values', default=True, help='Replace example values with known attribute values')
 @click.option('--train_percentage', default=1.0, help='Percentage of training data used for example value selection')
 @click.option('--no_example_values', default=10, help='Number of example values extracted from training set')
 @click.option('--title', default=False, help = 'Include Title')
@@ -316,10 +316,6 @@ def main(dataset, model, verbose, with_containment, with_validation_error_handli
                     if verbose:
                         print(final_prediction)
                     preds.append(final_prediction)
-
-        else:
-            preds = [select_and_run_llm(example['category'], example['input']) for example in
-                    tqdm(task_dict['examples'], disable=not verbose)]
 
         task_dict['total_tokens'] = cb.total_tokens
         task_dict['prompt_tokens'] = cb.prompt_tokens

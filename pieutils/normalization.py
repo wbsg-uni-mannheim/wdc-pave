@@ -1674,8 +1674,7 @@ def convert_to_kg(weight_str):
         return weight_str  # Return original string if no match
 
     whole_number, numerator, denominator, unit = matches.groups()
-    # print(whole_number, numerator, denominator, unit )
-
+    
     # Calculate the weight in grams
     if whole_number is not None:
         weight = float(whole_number)
@@ -1880,7 +1879,7 @@ def replace_short_forms(text):
 
     # Replace Piledriver FX-4
     text = text.replace("Piledriver FX-4",
-                        "AMD Piledriver FX-4 Core Processor")
+                        "Piledriver FX-4 Core Processor")
 
     return text
 

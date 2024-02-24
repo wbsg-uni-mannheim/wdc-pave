@@ -529,7 +529,6 @@ def visualize_performance_by_data_types(results, task_name, dataset_name, timest
     category_data = {}
     max_data_types = 0  # Track the maximum number of data types in any category
 
-    # First pass to find the maximum number of data types
     for (category, attribute, datatype), data in results['by_category_attribute_datatype'].items():
         f1_score = data['metrics'][2]  # Access the F1 score
         if category not in category_data:
@@ -546,7 +545,6 @@ def visualize_performance_by_data_types(results, task_name, dataset_name, timest
     n_rows = min(5, len(category_data))
     fig, axes = plt.subplots(n_rows, 1, figsize=(10, 4 * max_data_types))
 
-    # If there's only one category, axes won't be an array, so wrap it in a list
     if n_rows == 1:
         axes = [axes]
 
@@ -693,7 +691,7 @@ def evaluate_normalization_performance(task_name, converted_results):
     ax.set_xlabel('Scores')
     ax.set_title('Model Performance by Normalization Operation')
     ax.set_yticks(ind)
-    ax.set_yticklabels(weighted_metrics['Normalization_params_general'].values)  # Ensure this line matches your DataFrame structure
+    ax.set_yticklabels(weighted_metrics['Normalization_params_general'].values)  
 
     ax.legend()
 
@@ -721,7 +719,6 @@ def evaluate_normalization_performance(task_name, converted_results):
 
     results_df = results_df.sort_values(by=['Normalization_params_general', 'F1'], ascending=[True, False])
     
-    #print(results_df)
         
     unique_operations = results_df['Normalization_params_general'].unique()
     n_operations = len(unique_operations)
@@ -770,15 +767,10 @@ def evaluate_normalization_performance_one_by_one(original_task_dict):
     descriptions_csv = pd.read_csv(directory_path, sep=";")
     descriptions_csv["Normalization_params"] = descriptions_csv["Normalization_params"].str.strip("[]").str.replace("'", "")
     descriptions_csv["Normalization_params_general"] = descriptions_csv["Normalization_params_general"].str.strip("[]").str.replace("'", "")
-
-    # Filter out rows where Normalization_instruction is not null
     descriptions_csv = descriptions_csv[descriptions_csv['Normalization_params_general'].notnull()]
-
-    # Get unique normalization parameters
     unique_normalization_params = descriptions_csv['Normalization_params_general'].unique()
 
     for normalization_param in unique_normalization_params:
-        # Make a deep copy of the task_dict for each normalization parameter
         task_dict = copy.deepcopy(original_task_dict)
 
         # Filter attributes based on the current normalization parameter
@@ -793,30 +785,24 @@ def evaluate_normalization_performance_one_by_one(original_task_dict):
             if attribute not in category_attributes_with_guideline[category]:
                 category_attributes_with_guideline[category].append(attribute)
 
-        # Filter the task_dict based on the current normalization parameter
         for category, attributes in task_dict['known_attributes'].items():
             if category in category_attributes_with_guideline:
                 task_dict['known_attributes'][category] = [attr for attr in attributes if attr in category_attributes_with_guideline[category]]
             else:
                 task_dict['known_attributes'][category] = []
 
-        # Assuming you have a function to filter examples based on valid attributes
-        # This part of the code should remain similar to your original logic, adjusting targets and predictions accordingly
-
         targets = [example['target_scores'] for example in task_dict['examples']]
         preds = [json.loads(pred) if pred else {} for pred in [example['pred'] for example in task_dict['examples']]]
         categories = [example['category'] for example in task_dict['examples']]
         
-        # Adjust predictions to only include valid attributes for the current normalization parameter
         postprocessed_preds = [json.dumps({attr: value for attr, value in pred.items() if attr in category_attributes_with_guideline.get(example['category'], [])}) for pred, example in zip(preds, task_dict['examples'])]
 
-        # Update examples with filtered predictions
         task_dict['examples'] = [combine_example(example, pred, post_pred)
                                 for example, pred, post_pred in zip(task_dict['examples'], postprocessed_preds, postprocessed_preds)]
 
-        # Calculate and print performance metrics for the current normalization parameter
         results = calculate_recall_precision_f1_multiple_attributes(targets, postprocessed_preds, categories, task_dict['known_attributes'])
         print(f"Evaluating performance for normalization parameter: {normalization_param}")
-        print(results['micro'])  # Adjust according to your metrics structure
+        print(results['micro'])  
+        #print(results)
 
 
