@@ -23,7 +23,7 @@ The extraction and extraction&normalization WDC PAVE data can be found in the da
 ## Prompts
 We experiment with various prompt templates involving descriptions and example values, and adding demonstrations. The following figure shows the prompt structures for the two schema descriptions (black font for extraction, black + red font for extraction + normalization).
 
-![Prompt Designs](resources/prompt_template.PNG)
+![Prompt Designs](resources/prompt_template.png)
 
 ### Execution
 The prompts and the code to execute the prompts are defined in the folder `prompts`.
