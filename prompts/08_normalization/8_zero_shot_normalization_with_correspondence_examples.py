@@ -23,7 +23,7 @@ from pieutils.evaluation import evaluate_predictions, calculate_cost_per_1k, vis
 from pieutils.fusion import fuse_models
 from pieutils.preprocessing import update_task_dict_from_normalized_test_set, load_known_value_correspondences_for_normalized_attributes
 from pieutils.normalization import normalize_data
-from pieutils.pydantic_models import ProductCategory
+from pieutils.pydantic_models import ProductCategory, ProductCategorySpec
 
 
 @click.command()
@@ -75,7 +75,6 @@ def main(dataset, model, verbose, with_validation_error_handling, schema_type, r
                                                                                     file_name_train=file_name_train,
                                                                                     n_examples=no_example_values,
                                                                                     train_percentage=train_percentage)
-
     if verbose:
         print('Known attribute values:')
         print(known_attribute_values)
@@ -91,61 +90,88 @@ def main(dataset, model, verbose, with_validation_error_handling, schema_type, r
     save_populated_task_to_json(task_dict['task_name'], task_dict, title, description)
 
     # Ask LLM to generate meta models for each product category and attribute
-
-    # Create Chains
-    system_message_prompt = SystemMessagePromptTemplate.from_template("You are a world class algorithm for creating "
-                                                                      "descriptions of product categories and their "
-                                                                      "attributes following this JSON schema: \n {schema}.")
-    human_task_meta_model = HumanMessagePromptTemplate.from_template("Write short descriptions for the product category"
-                                                                      " {category} and the attributes {attributes} that are helpful to identify relevant attribute values in product titles."
-                                                                     "The descriptions should not be longer than one sentence."
-                                                                      "The following attribute values are known for each attribute: \n"
-                                                                     "{known_attribute_values}. \n" 
-                                                                     "Respond with a JSON object following the provided schema.")
-    prompt_meta_model = ChatPromptTemplate(messages=[system_message_prompt, human_task_meta_model])
-    
     pydantic_models = {}
     models_json = {}
-    for category in task_dict['known_attributes']:
-        print('Create model for category: {}'.format(category))
+    if no_example_values > 0:
+        # Create Chains
+        system_message_prompt = SystemMessagePromptTemplate.from_template("You are a world class algorithm for creating "
+                                                                        "descriptions of product categories and their "
+                                                                        "attributes following this JSON schema: \n {schema}.")
+        human_task_meta_model = HumanMessagePromptTemplate.from_template("Write short descriptions for the product category"
+                                                                        " {category} and the attributes {attributes} that are helpful to identify relevant attribute values in product titles."
+                                                                        "The descriptions should not be longer than one sentence."
+                                                                        "The following attribute values are known for each attribute: \n"
+                                                                        "{known_attribute_values}. \n" 
+                                                                        "Respond with a JSON object following the provided schema.")
+        prompt_meta_model = ChatPromptTemplate(messages=[system_message_prompt, human_task_meta_model])
 
-        chain = LLMChain(
-            prompt=prompt_meta_model,
-            llm=default_llm,
-            verbose=verbose
-        )
+        for category in task_dict['known_attributes']:
+            print('Create model for category: {}'.format(category))
 
-        #chain_meta_model = create_structured_output_chain(ProductCategory, llm, prompt_meta_model, verbose=True)
-        known_attribute_values_per_category = json.dumps(known_attribute_values[category])
-        
-        response = chain.run({'schema': convert_to_json_schema(ProductCategory, False), 
-                              'category': category,
-                              'attributes': ', '.join(task_dict['known_attributes'][category]),
-                              'known_attribute_values': known_attribute_values_per_category})
-        try:
-            print(response)
-            pred = ProductCategory(**json.loads(response))
+            chain = LLMChain(
+                prompt=prompt_meta_model,
+                llm=default_llm,
+                verbose=verbose
+            )
+
+            #chain_meta_model = create_structured_output_chain(ProductCategory, llm, prompt_meta_model, verbose=True)
+            known_attribute_values_per_category = json.dumps(known_attribute_values[category])
+            
+            response = chain.run({'schema': convert_to_json_schema(ProductCategory, False), 
+                                'category': category,
+                                'attributes': ', '.join(task_dict['known_attributes'][category]),
+                                'known_attribute_values': known_attribute_values_per_category})
+            try:
+                print(response)
+                pred = ProductCategory(**json.loads(response))
+                print(pred)
+            except JSONDecodeError as e:
+                print('JSONDecoder Error: {}'.format(e))
+                print('Response: {}'.format(response))
+                continue
+            except ValidationError as e:
+                print('Validation Error: {}'.format(e))
+                print('Response: {}'.format(response))
+                # Most likely the model did not generate any examples
+                response_dict = json.loads(response)
+                for attribute in response_dict['attributes']:
+                    if 'examples' not in attribute:
+                        attribute['examples'] = []
+                pred = ProductCategory(**response_dict)
+
+            if replace_example_values:
+                pydantic_models[category] = create_pydanctic_model_from_pydantic_meta_model(pred, known_attribute_values[category])
+            else:
+                pydantic_models[category] = create_pydanctic_model_from_pydantic_meta_model(pred)
+
+            models_json[category] = create_dict_of_pydanctic_product(pydantic_models[category])
+
+    else:
+        system_message_prompt = SystemMessagePromptTemplate.from_template("You are a world class algorithm for creating "
+                                                                      "descriptions of product categories and their "
+                                                                      "attributes following this JSON schema: \n {schema}.")
+        human_task_meta_model = HumanMessagePromptTemplate.from_template("Write short descriptions for the product category"
+                                                                      " {category} and the attributes {attributes}. "
+                                                                     "The descriptions should not be longer than one sentence."
+                                                                     " All attribute values of the attributes are substrings of product titles."
+                                                                     #" If you do not know how to describe an attribute, leave the description empty."
+                                                                      " Respond with a JSON object.")
+        prompt_meta_model = ChatPromptTemplate(messages=[system_message_prompt, human_task_meta_model])
+        for category in task_dict['known_attributes']:
+            print('Create model for category: {}'.format(category))
+
+            chain = LLMChain(
+                prompt=prompt_meta_model,
+                llm=default_llm,
+                verbose=verbose
+            )
+
+            response = chain.run({'schema': convert_to_json_schema(ProductCategorySpec, False), 
+                                  'category': category, 'attributes': ', '.join(task_dict['known_attributes'][category])})
+            pred = ProductCategorySpec(**json.loads(response))
             print(pred)
-        except JSONDecodeError as e:
-            print('JSONDecoder Error: {}'.format(e))
-            print('Response: {}'.format(response))
-            continue
-        except ValidationError as e:
-            print('Validation Error: {}'.format(e))
-            print('Response: {}'.format(response))
-            # Most likely the model did not generate any examples
-            response_dict = json.loads(response)
-            for attribute in response_dict['attributes']:
-                if 'examples' not in attribute:
-                    attribute['examples'] = []
-            pred = ProductCategory(**response_dict)
-
-        if replace_example_values:
-            pydantic_models[category] = create_pydanctic_model_from_pydantic_meta_model(pred, known_attribute_values[category])
-        else:
             pydantic_models[category] = create_pydanctic_model_from_pydantic_meta_model(pred)
-
-        models_json[category] = create_dict_of_pydanctic_product(pydantic_models[category])
+            models_json[category] = create_dict_of_pydanctic_product(pydantic_models[category])
 
 
     updated_schemas = {category: convert_to_json_schema(model, False) for category, model in pydantic_models.items()}

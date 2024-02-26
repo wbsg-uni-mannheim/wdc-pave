@@ -2,9 +2,9 @@
 export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/wdc-pave/:$PYTHONPATH"
 
 datasets=("wdc") 
-models=("gpt-4-1106-preview") 
+models=("gpt-3.5-turbo-0613") 
 schema_types=("json_schema") 
-example_values_counts=(3 5 10)  
+example_values_counts=(0)  # 3 5 10
 train_percentage=0.2
 with_containment=False
 replace_example_values=False
@@ -14,7 +14,7 @@ separate=False
 
 for dataset in "${datasets[@]}"; do
     for model in "${models[@]}"; do
-        python3 ../prompts/1_zero_shot_list/zero_shot_list.py --dataset $dataset --model $model --title $title --description $description --separate $separate
+        #python3 ../prompts/1_zero_shot_list/zero_shot_list.py --dataset $dataset --model $model --title $title --description $description --separate $separate
         
         for no_example_values in "${example_values_counts[@]}"; do  
             for schema_type in "${schema_types[@]}"; do
