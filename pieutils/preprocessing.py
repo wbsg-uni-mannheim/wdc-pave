@@ -563,7 +563,7 @@ def preprocess_wdc(dataset_name='wdc'):
         plt.close()
 
 
-def convert_to_mave_dataset(dataset_name, percentage=1, skip_test=False):
+def convert_to_mave_dataset(dataset_name, percentage=1, skip_test=False, normalization_subset=True):
     # Load dataset
     # Save train and test splits
     directory_path_preprocessed = f'{PROCESSED_DATASETS}/{dataset_name}/'
@@ -703,6 +703,37 @@ def convert_to_mave_dataset(dataset_name, percentage=1, skip_test=False):
                     example = json.loads(line)
                     test_examples.append(example)
 
+        if normalization_subset:
+            directory_path = f"../data/descriptions/wdc/descriptions.csv"
+            descriptions_csv = pd.read_csv(directory_path, sep=";")
+
+            # Filter out rows where Normalization_instruction is not null
+            descriptions_csv = descriptions_csv[descriptions_csv['Normalization_instruction'].notnull()]
+
+            category_attributes_with_guideline = {}
+
+            for index, row in descriptions_csv.iterrows():
+                category = row['Category']
+                attribute = row['Attribute']
+                if category not in category_attributes_with_guideline:
+                    category_attributes_with_guideline[category] = []
+                if attribute not in category_attributes_with_guideline[category]:
+                    category_attributes_with_guideline[category].append(attribute)
+
+            #print(category_attributes_with_guideline)
+
+                # Filter examples
+            for example in train_examples:
+                category = example['category']
+                if category in category_attributes_with_guideline:
+                    valid_attributes = category_attributes_with_guideline[category]
+                    example['target_scores'] = {attr: scores for attr, scores in example['target_scores'].items() if attr in valid_attributes}
+            for example in test_examples:
+                category = example['category']
+                if category in category_attributes_with_guideline:
+                    valid_attributes = category_attributes_with_guideline[category]
+                    example['target_scores'] = {attr: scores for attr, scores in example['target_scores'].items() if attr in valid_attributes}
+
         print('Number of train examples: {}'.format(len(train_examples)))
         print('Number of test examples: {}'.format(len(test_examples)))
         # Convert training and test records to mave format
@@ -796,7 +827,7 @@ def count_attribute_values(records, split):
     negative_attributes_count = sum(len(item['attributes']) for item in records[split]['negatives'])
     return positive_attributes_count, negative_attributes_count
 
-def convert_to_open_tag_format(dataset_name, percentage=1, skip_test=False):
+def convert_to_open_tag_format(dataset_name, percentage=1, skip_test=False, normalization_subset=True):
     """Convert records to OpenTag format.
         Format 1: {"id": 19, "title": "热风2019年春季新款潮流时尚男士休闲皮鞋透气低跟豆豆鞋h40m9107", "attribute": "款式", "value": "豆豆鞋"}
         Format 2: "热风2019年春季新款潮流时尚男士休闲皮鞋透气低跟豆豆鞋h40m9107<$$$>款式<$$$>豆豆鞋<$$$>19" - Split by <$$$>
@@ -874,6 +905,35 @@ def convert_to_open_tag_format(dataset_name, percentage=1, skip_test=False):
                                 record_id += 1
     
     else:
+        if normalization_subset:
+            directory_path = f"../data/descriptions/wdc/descriptions.csv"
+            descriptions_csv = pd.read_csv(directory_path, sep=";")
+
+            # Filter out rows where Normalization_instruction is not null
+            descriptions_csv = descriptions_csv[descriptions_csv['Normalization_instruction'].notnull()]
+
+            category_attributes_with_guideline = {}
+
+            for index, row in descriptions_csv.iterrows():
+                category = row['Category']
+                attribute = row['Attribute']
+                if category not in category_attributes_with_guideline:
+                    category_attributes_with_guideline[category] = []
+                if attribute not in category_attributes_with_guideline[category]:
+                    category_attributes_with_guideline[category].append(attribute)
+
+                # Filter examples
+            for example in train_examples:
+                category = example['category']
+                if category in category_attributes_with_guideline:
+                    valid_attributes = category_attributes_with_guideline[category]
+                    example['target_scores'] = {attr: scores for attr, scores in example['target_scores'].items() if attr in valid_attributes}
+            for example in test_examples:
+                category = example['category']
+                if category in category_attributes_with_guideline:
+                    valid_attributes = category_attributes_with_guideline[category]
+                    example['target_scores'] = {attr: scores for attr, scores in example['target_scores'].items() if attr in valid_attributes}
+
         record_id = 0
         for example in tqdm(train_examples):
             for attribute, values in example['target_scores'].items():
