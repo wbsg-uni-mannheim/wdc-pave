@@ -1,0 +1,191 @@
+# EXAMPLE PROMPT FOR THE COMPUTERS AND ACCESSORIES CATEGORY WITH 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
+System: You are a world class algorithm for extracting information in structured formats. 
+ {'name': 'Computers And Accessories', 'description': 'Computers and accessories category includes various products related to computing and its peripherals.', 'parameters': {'type': 'object', 'properties': {'Generation': {'description': 'The generation of the product, such as G6, G3, or G7.', 'examples': ['G6 -> Generation 6', 'G3 -> Generation 3', 'G7 -> Generation 7'], 'type': 'string'}, 'Part Number': {'description': 'The unique identifier assigned to a specific product.', 'examples': ['157305-B21 -> 157305B21', '539843-001 -> 539843001', '361413-B21 -> 361413B21'], 'type': 'string'}, 'Product Type': {'description': 'The type or category of the product, such as drive, rack-mountable, or processor option kit.', 'examples': ['Drive -> Storage Solutions', 'rack-mountable -> Server and Networking Equipment', 'Processor Option Kit -> Memory and Processing Upgrades'], 'type': 'string'}, 'Cache': {'description': 'The cache size of the product in megabytes.', 'examples': ['1MB -> 1 Megabytes', '18MB -> 18 Megabytes', '12MB -> 12 Megabytes'], 'type': 'string'}, 'Processor Type': {'description': 'The type of processor used in the product, such as AMD Opteron/Piledriver Series or Intel Xeon Series.', 'examples': ['Opteron 8431 -> AMD Opteron/Piledriver Series', 'Xeon -> Intel Xeon Series', 'Xeon E7-4807 -> Intel Xeon Series'], 'type': 'string'}, 'Processor Core': {'description': 'The number of processor cores in the product.', 'examples': ['Single-core -> 1', '6-core -> 6', '4-core -> 4'], 'type': 'string'}, 'Interface': {'description': 'The interface used by the product, such as SAS (Serial Attached SCSI) Interfaces or SCSI Interfaces.', 'examples': ['SAS -> SAS (Serial Attached SCSI) Interfaces', 'Ultra2 -> SCSI Interfaces', 'SAT -> SAS (Serial Attached SCSI) Interfaces'], 'type': 'string'}, 'Manufacturer': {'description': 'The manufacturer of the product, such as Hewlett-Packard, Dell, or International Business Machines.', 'examples': ['HP -> Hewlett-Packard', 'Dell -> Dell', 'IBM -> International Business Machines'], 'type': 'string'}, 'Capacity': {'description': 'The storage capacity of the product in gigabytes.', 'examples': ['40/80GB -> 40/80 Gigabytes', '16 GB -> 16 Gigabytes', '146-GB -> 146 Gigabytes'], 'type': 'string'}, 'Ports': {'description': 'The number of ports available in the product.', 'examples': ['SP -> 1', 'DP -> 2', '2-Ports -> 2'], 'type': 'string'}, 'Rotational Speed': {'description': 'The rotational speed of the product in revolutions per minute (RPM).', 'examples': ['15K -> 15000', '7.2K -> 7200', '5.9K -> 5900'], 'type': 'string'}}}}
+Human: Split the product title and description by whitespace. Extract the valid attribute values from the product title and description. Normalize the attribute values according to the guidelines below in JSON format. Unknown attribute values should be marked as 'n/a'. Do not explain your answer. 
+Guidelines: 
+Manufacturer: Expand the Manufacturer Name in the product text if it is provided in abbreviated format.
+Generation: Look for specific abbreviations and short forms related to technology generations, DDR memory versions, tape technologies, and processor names. Replace these terms with their full forms and leave a space between the full form and the numeric value (if any).
+Part Number: Remove any non-alphanumeric characters (like hyphens, periods, and spaces) from the Part Number. Only letters and numbers should remain in your output.
+Capacity: Replace 'GB' with 'Gigabytes', 'TB' with 'Terabytes', 'MB' with 'Megabytes', and 'W' with 'Watts'.
+Remove any hyphens between the numeric value and the unit.
+Ensure there is a space between the numeric value and the expanded unit.
+Product Type: Give the Product Type as EXACTLY ONE of the following:
+- Storage Solutions
+- Server and Networking Equipment
+- Power Management and Distribution
+- Memory and Processing Upgrades
+- Racks, Enclosures, and Mounting Solutions
+- Data Transfer and Connectivity
+- Media and Accessories
+- Cooling and Thermal Management
+- Miscellaneous and Specialized Equipment
+Interface: Give the Interface as EXACTLY ONE of the following:
+- SCSI Interface
+- Fibre Channel Interfaces
+- SAS (Serial Attached SCSI) Interfaces
+- Ethernet and Networking Interfaces
+- Other Interfaces
+Cache: Expand abbreviated units: Convert 'GB' to 'Gigabytes', 'MB' to 'Megabytes', and 'KB' to 'Kilobytes'.
+Remove any hyphens between the numeric value and the unit.
+Ensure a space is present between the numeric value and the full unit name.
+Ports: If the product text explicitly states a number of ports, use that number.
+If the product text implies a number of ports, convert it into its numeric equivalent. 
+If the description includes multiple port counts, sum them to provide a total port count.
+Processor Core: Convert the Processor Core value into their corresponding numeric values. 
+If the product text specifies the number of cores directly, use that number. 
+If the product text implies a number of cores, convert it into its numeric equivalents.
+Processor Type: Give the Processor Type as EXACTLY ONE of the following:
+- Intel Xeon Series
+- AMD Opteron/Piledriver Series
+- Pentium Series
+Rotational Speed: Extract the Rotational Speed value as a single numeric value. If it is given in 'K' (thousands), convert into a full numeric value.
+
+Human: title: 435952-B21 HP Xeon E5335 2.0GHz DL360 G5" Null 
+ description: Description:Intel Xeon E5335 DL360 G5(2.0GHz/4-core/8MB-2x4MB/80W)Full Processor Option KitPart Number(s) Part# 435952-B21 Spare 437948-001 Assembly 437426-001"
+
+
+---------------------------
+# EXAMPLE PROMPT FOR THE JEWELRY CATEGORY WITH 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
+System: You are a world class algorithm for extracting information in structured formats. 
+ {'name': 'Jewelry', 'description': 'A category for various types of jewelry items.', 'parameters': {'type': 'object', 'properties': {'Product Type': {'description': 'The type or category of the jewelry item.', 'examples': ['Wedding band -> Rings/Bands', 'Wedding bands -> Rings/Bands', 'wedding band -> Rings/Bands'], 'type': 'string'}, 'Brand': {'description': 'The brand or manufacturer of the jewelry item.', 'examples': ['Benchmark -> BENCHMARK', 'ArtCarved -> ARTCARVED', 'Hermes -> HERMES'], 'type': 'string'}, 'Model Number': {'description': 'The unique model number of the jewelry item.', 'examples': ['CF15630914KR -> CF15630914KR', '11-WV5013-G -> 11WV5013G', 'RECF51651614KW -> RECF51651614KW'], 'type': 'string'}}}}
+Human: Split the product title and description by whitespace. Extract the valid attribute values from the product title and description. Normalize the attribute values according to the guidelines below in JSON format. Unknown attribute values should be marked as 'n/a'. Do not explain your answer. 
+Guidelines: 
+Product Type: Give the Product Type as EXACTLY ONE of the following:
+- Rings/Bands
+- Bracelets
+- Necklace/Chain
+- Earrings
+- Miscellaneous
+Brand: Return the Brand in Uppercase Format
+Model Number: Remove any non-alphanumeric characters (like hyphens, periods, and spaces) from the Model Number. Only letters and numbers should remain in your output.
+
+Human: title: Benchmark Standard Comfort-Fit Wedding band LCF15018KW Shop Benchmark LCF15018KW bands | Midtown Jewelers 
+ description: If you are searching for a contemporary wedding band to represent your unending commitment, you can be sure that you'll find it here at Midtown Jewelers in Reston, V. We stock only top brands in the industry. Your wedding band will be worn and loved for a lifetime, which is why we are privileged to be an authorized Benchmark retailer. Benchmark offers the top-notch in luxury and quality. Through our exceptional partnership we are able to offer you this detailed Gents Benchmark wedding band. This ring is spectacular and crafted of smooth 18k white gold. This wedding band comes from the ever popular Standard Comfort-Fit collection. At Midtown Jewelers we enjoy helping couples say I do.
+
+
+---------------------------
+# EXAMPLE PROMPT FOR THE OFFICE PRODUCTS CATEGORY WITH 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
+System: You are a world class algorithm for extracting information in structured formats. 
+ {'name': 'Office Products', 'description': 'Products that are commonly used in office environments.', 'parameters': {'type': 'object', 'properties': {'Product Type': {'description': 'The type or category of the product.', 'examples': ['Toner Cartridge -> Printing, Copying, Laminating', 'Bill of Lading -> Miscellaneous', 'Print Cartridge -> Printing, Copying, Laminating'], 'type': 'string'}, 'Color(s)': {'description': 'The color or colors of the product.', 'examples': ['Black -> Black', 'Blue, White -> Blue', 'Yellow -> Yellow'], 'type': 'string'}, 'Retail UPC': {'description': 'The Universal Product Code (UPC) used for retail identification.', 'examples': ['025932384141 -> 25932', '734646387811 -> 34646', '078628479102 -> 78628'], 'type': 'string'}, 'Manufacturer Stock Number': {'description': 'The unique stock number assigned by the manufacturer.', 'examples': ['60F1H00 -> 60F1H00', 'TOPL3841 -> TOPL3841', 'LEX12S0300 -> LEX12S0300'], 'type': 'string'}, 'Pack Quantity': {'description': 'The quantity of items included in a pack.', 'examples': ['250 Sts/Pack -> 250', '700 stickers per pack -> 700', '200 Sheets/Pack -> 200'], 'type': 'string'}, 'Length': {'description': 'The length of the product.', 'examples': ['1/4" -> 0.6', '314" -> 797.6', '82 ft -> 2499.4'], 'type': 'string'}, 'Depth': {'description': 'The depth or thickness of the product.', 'examples': ['18 -> 45.7', '5 3/4 -> 14.6', '13 -> 33.0'], 'type': 'string'}, 'Paper Weight': {'description': 'The weight of the paper used in the product.', 'examples': ['16-lb. -> 7.2', '40-lb -> 18.1', '65 lb -> 29.4'], 'type': 'string'}, 'Height': {'description': 'The height of the product.', 'examples': ['7 -> 17.8', '7/8 -> 2.2', '11 -> 27.9'], 'type': 'string'}, 'Width': {'description': 'The width of the product.', 'examples': ['8-1/2 -> 21.6', '1-1/4 -> 3.2', '8 1/2 -> 21.6'], 'type': 'string'}}}}
+Human: Split the product title and description by whitespace. Extract the valid attribute values from the product title and description. Normalize the attribute values according to the guidelines below in JSON format. Unknown attribute values should be marked as 'n/a'. Do not explain your answer. 
+Guidelines: 
+Product Type: Give the Product Type as EXACTLY ONE of the following:
+-Writing/Erasing Instruments and Accessories
+-Paper Products 
+-Printing, Copying, Laminating 
+-Folders, Dividers, Indexing, Flags, Labels, Cases, Holders, Bindings
+-Office Furniture and Ergonomic Products 
+-Board and Presentation Materials 
+-Shipping and Packaging, Envelopes 
+-Cleaning and Maintenance 
+-Stationery and Desk Accessories
+-Stickers and Badges
+-Time, Planning and Organization 
+-Miscellaneous
+Color(s): Categorize the color of each product into ONLY ONE of the following options:
+-Black
+-White
+-Brown
+-Green
+-Beige
+-Gray and Metallic
+-Blue
+-Red
+-Pink
+-Yellow
+-Purple
+-Assorted/Others
+-No Color/Transparent
+
+If the product description mentions exactly two colors, categorize it under the first mentioned color.
+If the product description mentions more than two colors, classify it as 'Assorted/Others'."
+Retail UPC: Extract the Manufacturer Code from a Retail UPC by isolating digits 2 to 6. 
+Manufacturer Stock Number: Remove any non-alphanumeric characters (like hyphens, periods, and spaces) from the Manufacturer Stock Number. Only letters and numbers should remain in your output.
+Pack Quantity: Extract the Pack Quantity as a single numeric number. If the Package Quantity is given as a word, extact the correspodnung number in numeric format.
+Paper Weight: Convert the Paper Weight from lbs (pounds) or grams to kilograms (KG), and present the result as a single numeric value in KG.
+Round the final value to one decimal place.
+Do not include any unit indicators in the output.
+Width/Height/Depth/Length: 
+Convert and standardize the Width/Height/Depth/Length measurements to centimeters (cm). 
+If the Width/Height/Depth/Length is not already in cm, convert it from inches, mm, meters, yards, or feet to cm.
+If no unit is specified, assume the measurement is in inches.
+For Width/Height/Depth/Length ranges, use the larger value in the range for conversion.
+Output the final Width/Height/Depth/Length value as a single numeric figure in cm, rounded to one decimal place.
+Exclude any unit indicators in the output.
+
+Human: title: Lee Ultimate Stamp Dispenser Black One 100 Count Roll 2" Dia. X 1 11/16" - LEE40100 ReStockIt Plastic Lee Dispenser 
+ description: Easily separate backing paper from self-adhesive stamp rolls. Patented dispenser is durable and reusable. Just drop roll in the dispenser, feed through the slot, feed backing under slots and pull backing to dispense. Use 50 or 100 count rolls or stamps, address labels, labels or stickers, up to 1" wide. Capacity (text): One 100 Count Roll; Color(s): Black; Material(s): Plastic; Size: 2" dia. x 1 11/16" h.ALTERNATE ITEM #: 871314, B004DJ1I6OUPC: 084417401001
+
+
+---------------------------
+# EXAMPLE PROMPT FOR THE GROCERY AND GOURMET FOOD CATEGORY WITH 3 CORRESPONDENCES VALUES AND DESCRIPTIONS
+System: You are a world class algorithm for extracting information in structured formats. 
+ {'name': 'Grocery And Gourmet Food', 'description': 'A category that includes various grocery and gourmet food products.', 'parameters': {'type': 'object', 'properties': {'Brand': {'description': 'The brand of the product.', 'examples': ["Kellogg's -> KELLOGG'S", 'Fellowes -> FELLOWES', 'Vera Wang Wedgwood -> VERA WANG WEDGWOOD'], 'type': 'string'}, 'Product Type': {'description': 'The type or category of the product.', 'examples': ['Cereal Bars -> Snacks and Breakfast', 'Shredder Oil & Lubricant -> Kitchen and Dining Accessories', 'Bread & Butter Plate -> Kitchen and Dining Accessories'], 'type': 'string'}, 'Size/Weight': {'description': 'The size or weight of the product.', 'examples': ['1.3oz -> 37', '12 Ounce -> 12 Ounce', '3.08 oz -> 87'], 'type': 'string'}, 'Pack Quantity': {'description': 'The quantity of products in a pack.', 'examples': ['16/Box -> 16', '1 -> 1', '100/Box -> 100'], 'type': 'string'}, 'Retail UPC': {'description': 'The retail UPC code of the product.', 'examples': ['077511352508 -> 77511', '086631017723 -> 86631', '856924000974 -> 56924'], 'type': 'string'}}}}
+Human: Split the product title and description by whitespace. Extract the valid attribute values from the product title and description. Normalize the attribute values according to the guidelines below in JSON format. Unknown attribute values should be marked as 'n/a'. Do not explain your answer. 
+Guidelines: 
+Brand: Return the Brand in Uppercase Format
+Product Type: Give the Product Type EXACTLY ONE of the following:
+- Coffee and Tea
+- Beverages
+- Snacks and Breakfast
+- Kitchen and Accessories
+- Sweeteners and Sugars
+- Health Foods and Protein Powders
+Size/Weight: Convert and standardize Size/Weight measurements to grams (g)
+Round the final value to the nearest full digit.
+Output the final weight value as a single numeric figure in grams, without any unit indicator.
+If the weight is mentioned in a unit other than oz, kg, or lbs (e.g., inches), leave it as is.
+Pack Quantity: Extract the Pack Quantity as a single numeric number. If the Package Quantity is given as a word, extact the correspodnung number in numeric format.
+Retail UPC: Extract the Manufacturer Code from a Retail UPC by isolating digits 2 to 6. 
+
+Human: title: Anchor Hocking S3500015 Glass Old Fashioned Anchor Fashioned | Rocks Glass 
+ description: Double Old Fashioned Glass, 11 oz., Stolzle, New York Series (priced per case, packed 6 each per case)
+
+
+
+---------------------------
+# EXAMPLE PROMPT FOR THE HOME AND GARDEN CATEGORY WITH 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
+System: You are a world class algorithm for extracting information in structured formats. 
+ {'name': 'Home And Garden', 'description': 'Products related to home and garden.', 'parameters': {'type': 'object', 'properties': {'Product Type': {'description': 'Type of product, such as furniture, storage, racks, fixtures, cleaning, sinks, maintenance equipment, trash disposal.', 'examples': ['Corner Desk -> Furniture, Storage, Racks and Fixtures', 'Hand Cleaner -> Cleaning, Sinks, Maintenance Equipment and Trash Disposal', 'Dishtable -> Furniture, Storage, Racks and Fixtures'], 'type': 'string'}, 'Height': {'description': 'Height of the product in inches.', 'examples': ['29 7/8 -> 75.9', '11-3/4" -> 29.8', '10-1/8" -> 25.7'], 'type': 'string'}, 'Color': {'description': 'Color of the product, such as brown, black, white.', 'examples': ['Natural Cherry/Slate Gray -> Brown', 'black -> Black', 'White -> White'], 'type': 'string'}, 'Length': {'description': 'Length of the product in inches or feet.', 'examples': ['36" -> 91.4', '4 ft. -> 121.9', "60' -> 1828.8"], 'type': 'string'}, 'Depth': {'description': 'Depth of the product in inches.', 'examples': ['47 1/4 -> 120.0', '14" -> 35.6', '18-9/16" -> 47.1'], 'type': 'string'}, 'Retail UPC': {'description': 'Retail UPC code of the product.', 'examples': ['042976574666 -> 42976', '092447001917 -> 92447', '073555421521 -> 73555'], 'type': 'string'}, 'Manufacturer Stock Number': {'description': 'Stock number assigned by the manufacturer.', 'examples': ['BSHWC57466 -> BSHWC57466', 'GOJ093704 -> GOJ093704', 'DTC-3-2020-120R -> DTC32020120R'], 'type': 'string'}, 'Width': {'description': 'Width of the product in inches.', 'examples': ['47 1/4 -> 120.0', '3-7/8" -> 9.8', '72" -> 182.9'], 'type': 'string'}}}}
+Human: Split the product title and description by whitespace. Extract the valid attribute values from the product title and description. Normalize the attribute values according to the guidelines below in JSON format. Unknown attribute values should be marked as 'n/a'. Do not explain your answer. 
+Guidelines: 
+Product Type: Give the product type as EXACTLY ONE of the following:
+-Food and Drink Preparation and Cooking Equipment
+-Ice Machines, Bins and Makers
+-Food and Beverage Storage, Dispensers, Serving, Display and Refrigeration
+-Tableware
+-Smokers Equipment
+-Dishwashers and related Equipment
+-Cleaning, Sinks, Maintenance Equipment and Trash Disposal
+-Carts, Dollies and Transportation
+-Furniture, Storage, Racks and Fixtures
+-Office and Organizational Supplies
+-Accessories, Miscellaneous
+Color: Categorize the color of each product into ONLY ONE of the following options:
+-Black
+-White
+-Brown
+-Green
+-Beige
+-Gray and Metallic
+-Blue
+-Red
+-Pink
+-Yellow
+-Purple
+-Assorted/Others
+-No Color/Transparent
+If the product description mentions exactly two colors, categorize it under the first mentioned color.
+If the product description mentions more than two colors, classify it as 'Assorted/Others'."
+Retail UPC: Extract the Manufacturer Code from a Retail UPC by isolating digits 2 to 6. 
+Manufacturer Stock Number: Remove any non-alphanumeric characters (like hyphens, periods, and spaces) from the Manufacturer Stock Number. Only letters and numbers should remain in your output.
+Width/Height/Depth/Length: 
+Convert and standardize the Width/Height/Depth/Length measurements to centimeters (cm). 
+If the Width/Height/Depth/Length is not already in cm, convert it from inches, mm, meters, yards, or feet to cm.
+If no unit is specified, assume the measurement is in inches.
+For Width/Height/Depth/Length ranges, use the larger value in the range for conversion.
+Output the final Width/Height/Depth/Length value as a single numeric figure in cm, rounded to one decimal place.
+Exclude any unit indicators in the output."
+
+Human: title: Star 624TCHSF Griddle, Gas, Countertop Star Griddle Gas 
+ description: Star-Max Griddle, countertop, gas, 24"L, 27-3/4"D, 15-1/2"H, 1" chrome griddle plate, throttling thermostat every 12", heavy duty knobs, safety pilot, aluminum steel construction, stainless steel front with black trim, wrap-around stainless steel splash guard, grease trough & stainless steel drawer, 4" legs, 56,600 BTU

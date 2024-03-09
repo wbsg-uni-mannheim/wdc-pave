@@ -2642,9 +2642,19 @@ def normalize_data(split="test", normalization_params=["String Expansion", "Cate
     normalized_attributes = {k: v for k,
                              v in normalized_attributes.items() if v}
 
+    for product in data:
+        category = product['category']
+        category_specific_attributes = normalized_attributes.get(category, {})
+        filtered_target_scores = {
+            attribute: values for attribute, values in product['target_scores'].items()
+            if attribute in category_specific_attributes
+        }
+        product['target_scores'] = filtered_target_scores
+
     # Save data in new directory
     params = "_".join(normalization_params) if isinstance(
         normalization_params, list) else normalization_params
+    
     name = f"normalized_{split}_{params}"
 
     with open(os.path.join("../data/processed_datasets/wdc/normalized/", f"{name}.jsonl"), "w", encoding='utf-8') as f:
@@ -2655,5 +2665,8 @@ def normalize_data(split="test", normalization_params=["String Expansion", "Cate
     with open(os.path.join("../data/processed_datasets/wdc/normalized/", f"{name}.jsonl"), "w", encoding='utf-8') as f:
         for example in data:
             f.write(json.dumps(example) + "\n")
+
+
+
 
     return normalized_attributes
