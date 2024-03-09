@@ -88,6 +88,7 @@ Rotational Speed: Extract the Rotational Speed value as a single numeric value. 
 Human: title: 435952-B21 HP Xeon E5335 2.0GHz DL360 G5" Null 
  description: Description:Intel Xeon E5335 DL360 G5(2.0GHz/4-core/8MB-2x4MB/80W)Full Processor Option KitPart Number(s) Part# 435952-B21 Spare 437948-001 Assembly 437426-001"
 
+
 ---------------------------
 # EXAMPLE PROMPT FOR THE JEWELRY CATEGORY WITH 3 DEMONSTRATIONS 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
 System: You are a world class algorithm for extracting information in structured formats. 
@@ -122,6 +123,7 @@ Model Number: Remove any non-alphanumeric characters (like hyphens, periods, and
 
 Human: title: Benchmark Standard Comfort-Fit Wedding band LCF15018KW Shop Benchmark LCF15018KW bands | Midtown Jewelers 
  description: If you are searching for a contemporary wedding band to represent your unending commitment, you can be sure that you'll find it here at Midtown Jewelers in Reston, V. We stock only top brands in the industry. Your wedding band will be worn and loved for a lifetime, which is why we are privileged to be an authorized Benchmark retailer. Benchmark offers the top-notch in luxury and quality. Through our exceptional partnership we are able to offer you this detailed Gents Benchmark wedding band. This ring is spectacular and crafted of smooth 18k white gold. This wedding band comes from the ever popular Standard Comfort-Fit collection. At Midtown Jewelers we enjoy helping couples say I do.
+
 
 ---------------------------
 # EXAMPLE PROMPT FOR THE OFFICE PRODUCTS CATEGORY WITH 3 DEMONSTRATIONS 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
@@ -230,6 +232,7 @@ Width/Height/Depth/Length:
 Human: title: Lee Ultimate Stamp Dispenser Black One 100 Count Roll 2" Dia. X 1 11/16" - LEE40100 ReStockIt Plastic Lee Dispenser 
  description: Easily separate backing paper from self-adhesive stamp rolls. Patented dispenser is durable and reusable. Just drop roll in the dispenser, feed through the slot, feed backing under slots and pull backing to dispense. Use 50 or 100 count rolls or stamps, address labels, labels or stickers, up to 1" wide. Capacity (text): One 100 Count Roll; Color(s): Black; Material(s): Plastic; Size: 2" dia. x 1 11/16" h.ALTERNATE ITEM #: 871314, B004DJ1I6OUPC: 084417401001
 
+
 ---------------------------
 # EXAMPLE PROMPT FOR THE GROCERY AND GOURMET FOOD CATEGORY WITH 3 DEMONSTRATIONS 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
 System: You are a world class algorithm for extracting information in structured formats. 
@@ -278,7 +281,6 @@ Human: title: Anchor Hocking S3500015 Glass Old Fashioned Anchor Fashioned | Roc
  description: Double Old Fashioned Glass, 11 oz., Stolzle, New York Series (priced per case, packed 6 each per case)
 
 
-
 ---------------------------
 # EXAMPLE PROMPT FOR THE HOME AND GARDEN CATEGORY WITH 3 DEMONSTRATIONS 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
 System: You are a world class algorithm for extracting information in structured formats. 
@@ -323,7 +325,6 @@ If no unit is specified, assume the measurement is in inches.
 For Width/Height/Depth/Length ranges, use the larger value in the range for conversion.
 Output the final Width/Height/Depth/Length value as a single numeric figure in cm, rounded to one decimal place.
 Exclude any unit indicators in the output."
-
 
 Human: APW Wyott GGT-36I-CE Griddle, Gas, Countertop Countertop | 36" Gas Griddles APW Griddle Griddle, gas, countertop, 36" W x 25" D (O.A.), 1" thick smooth polished steel griddle plate, snap-action thermostat, stainless steel front, balance aluminized steel, 4" adjustable legs, 75,000 BTU, (Export model)
 AI: {"Product Type": "Food and Drink Preparation and Cooking Equipment", "Width": "91.4", "Height": "n/a", "Color": "n/a", "Length": "n/a", "Depth": "63.5", "Retail UPC": "n/a", "Manufacturer Stock Number": "GGT36ICE"}     
@@ -371,7 +372,6 @@ If no unit is specified, assume the measurement is in inches.
 For Width/Height/Depth/Length ranges, use the larger value in the range for conversion.
 Output the final Width/Height/Depth/Length value as a single numeric figure in cm, rounded to one decimal place.
 Exclude any unit indicators in the output.
-
 
 Human: title: Star 624TCHSF Griddle, Gas, Countertop Star Griddle Gas 
  description: Star-Max Griddle, countertop, gas, 24"L, 27-3/4"D, 15-1/2"H, 1" chrome griddle plate, throttling thermostat every 12", heavy duty knobs, safety pilot, aluminum steel construction, stainless steel front with black trim, wrap-around stainless steel splash guard, grease trough & stainless steel drawer, 4" legs, 56,600 BTU

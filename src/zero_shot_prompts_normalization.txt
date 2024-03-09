@@ -142,7 +142,6 @@ Human: title: Anchor Hocking S3500015 Glass Old Fashioned Anchor Fashioned | Roc
  description: Double Old Fashioned Glass, 11 oz., Stolzle, New York Series (priced per case, packed 6 each per case)
 
 
-
 ---------------------------
 # EXAMPLE PROMPT FOR THE HOME AND GARDEN CATEGORY WITH 3 EXAMPLE CORRESPONDENCES AND DESCRIPTIONS
 System: You are a world class algorithm for extracting information in structured formats. 
