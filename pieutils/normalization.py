@@ -1920,7 +1920,7 @@ def delete_marks(id):
     return re.sub(r'[^a-zA-Z0-9]', '', id)
 
 
-def normalize_data(split="test", normalization_params=["String Expansion", "Categorization", "Value Extraction", "Value Recalculation"]):
+def normalize_data(split="test", normalization_params=['Name Expansion', 'Numeric Standardization', 'To Uppercase', 'Substring Extraction', 'Product Type Generalisation', 'Unit Conversion', 'Color Generalization', 'Name Generalisation', 'Unit Expansion', 'To Uppercase', 'Delete Marks']):
 
     data = []
 
@@ -2642,14 +2642,14 @@ def normalize_data(split="test", normalization_params=["String Expansion", "Cate
     normalized_attributes = {k: v for k,
                              v in normalized_attributes.items() if v}
 
-    for product in data:
-        category = product['category']
-        category_specific_attributes = normalized_attributes.get(category, {})
-        filtered_target_scores = {
-            attribute: values for attribute, values in product['target_scores'].items()
-            if attribute in category_specific_attributes
-        }
-        product['target_scores'] = filtered_target_scores
+    #for product in data:
+    #    category = product['category']
+    #    category_specific_attributes = normalized_attributes.get(category, {})
+    #    filtered_target_scores = {
+    #        attribute: values for attribute, values in product['target_scores'].items()
+    #        if attribute in category_specific_attributes
+    #    }
+    #    product['target_scores'] = filtered_target_scores
 
     # Save data in new directory
     params = "_".join(normalization_params) if isinstance(
