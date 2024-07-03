@@ -1,5 +1,5 @@
 # Using LLMs for the Extraction and Normalization of Product Attribute Values
-This repository contains code and data for experiments done in the paper "[Using LLMs for the Extraction and Normalization of Product Attribute Values](https://arxiv.org/pdf/2403.02130)".
+This repository contains code and data for experiments done in the paper "[Using LLMs for the Extraction and Normalization of Product Attribute Values](https://arxiv.org/pdf/2403.02130)" to be presented at [ADBIS 2024](https://conferences.sigappfr.org/adbis2024/).
 Further information on the benchmark WDC Product Attribute-Value Extraction (WDC Pave) can be found on the [project page](https://webdatacommons.org/structureddata/wdc-pave/).
 
 ## Requirements
