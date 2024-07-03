@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-PROCESSED_DATASETS = 'data/processed_datasets'
+PROCESSED_DATASETS = 'data/processed_datasets/old_structure/'
 
 
 def calculate_dataset_statistics(loaded_dataset, category, descriptions):
@@ -62,28 +62,28 @@ def main(dataset):
     descriptions = descriptions[pd.notna(descriptions['Normalization_params'])]
 
     # # Load dataset
-    # directory_path_preprocessed = f'{PROCESSED_DATASETS}/{dataset}/'
-    #
-    # loaded_datasets = {'train': [], 'test': []}
-    # with open(os.path.join(directory_path_preprocessed, 'train_0.2.jsonl'), 'r') as f:
-    #     for line in tqdm(f.readlines()):
-    #         loaded_datasets['train'].append(json.loads(line))
-    #
-    # with open(os.path.join(directory_path_preprocessed, 'test.jsonl'), 'r') as f:
-    #     for line in tqdm(f.readlines()):
-    #         loaded_datasets['test'].append(json.loads(line))
-
-    # Load dataset - normalized
-    directory_path_preprocessed = f'{PROCESSED_DATASETS}/{dataset}/normalized'
+    directory_path_preprocessed = f'{PROCESSED_DATASETS}/{dataset}/'
 
     loaded_datasets = {'train': [], 'test': []}
-    with open(os.path.join(directory_path_preprocessed, 'normalized_train_0.2.jsonl'), 'r') as f:
+    with open(os.path.join(directory_path_preprocessed, 'train_0.2.jsonl'), 'r') as f:
         for line in tqdm(f.readlines()):
             loaded_datasets['train'].append(json.loads(line))
 
-    with open(os.path.join(directory_path_preprocessed, 'normalized_test.jsonl'), 'r') as f:
+    with open(os.path.join(directory_path_preprocessed, 'test.jsonl'), 'r') as f:
         for line in tqdm(f.readlines()):
             loaded_datasets['test'].append(json.loads(line))
+
+    # Load dataset - normalized
+    # directory_path_preprocessed = f'{PROCESSED_DATASETS}/{dataset}/normalized'
+    #
+    # loaded_datasets = {'train': [], 'test': []}
+    # with open(os.path.join(directory_path_preprocessed, 'normalized_train_0.2.jsonl'), 'r') as f:
+    #     for line in tqdm(f.readlines()):
+    #         loaded_datasets['train'].append(json.loads(line))
+    #
+    # with open(os.path.join(directory_path_preprocessed, 'normalized_test.jsonl'), 'r') as f:
+    #     for line in tqdm(f.readlines()):
+    #         loaded_datasets['test'].append(json.loads(line))
 
 
     print(f'Loaded {len(loaded_datasets["train"])} training samples and {len(loaded_datasets["test"])} testing samples')
