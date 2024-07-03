@@ -1,5 +1,6 @@
 # Using LLMs for the Extraction and Normalization of Product Attribute Values
-This repository contains code and data for experiments on attribute value extraction and normalization using large language models.
+This repository contains code and data for experiments done in the paper "[Using LLMs for the Extraction and Normalization of Product Attribute Values](https://arxiv.org/pdf/2403.02130)".
+Further information on the benchmark WDC Product Attribute-Value Extraction (WDC Pave) can be found on the [project page](https://webdatacommons.org/structureddata/wdc-pave/).
 
 ## Requirements
 
@@ -18,7 +19,7 @@ pip install pieutils/
 ```
 
 ## Dataset
-The extraction and extraction&normalization WDC PAVE data can be found in the data/processed_datasets folder.
+The extraction and extraction with normalization WDC PAVE data can be found in the data/processed_datasets folder.
 
 ## Prompts
 We experiment with various prompt templates involving descriptions and example values, and adding demonstrations. The following figure shows the prompt structures for the two schema descriptions (black font for extraction, black + red font for extraction + normalization).
@@ -32,5 +33,6 @@ You can run the prompts with the following scripts:
 ```
 scripts/01_run_example_values_prompts.sh
 scripts/02_run_prompts_with_training_data.sh
-scripts/08_run_prompts_for_data_normalization.sh
+scripts/08_run_prompts_for_extraction_with_normalization.sh
+scripts/10_run_prompts_for_normalization_multiple_attributes.sh
 ```
