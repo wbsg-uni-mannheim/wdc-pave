@@ -1,3 +1,4 @@
+import ast
 import json
 # Update Task Dict
 import random
@@ -5,54 +6,66 @@ from datetime import datetime
 from json import JSONDecodeError
 
 import click
-import torch
 from dotenv import load_dotenv
-from langchain import LLMChain, HuggingFacePipeline
+from langchain import LLMChain
 from langchain.callbacks import get_openai_callback
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import HumanMessagePromptTemplate, ChatPromptTemplate, SystemMessagePromptTemplate, \
     AIMessagePromptTemplate, FewShotChatMessagePromptTemplate
 from pydantic import ValidationError
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 from pieutils import save_populated_task_to_json, create_pydanctic_model_from_pydantic_meta_model, \
-    create_dict_of_pydanctic_product, convert_to_json_schema, parse_llm_response_to_json, subset_task_dict, combine_example
-from pieutils.evaluation import evaluate_predictions, calculate_cost_per_1k, visualize_performance, calculate_recall_precision_f1_multiple_attributes
+    create_dict_of_pydanctic_product, convert_to_json_schema, parse_llm_response_to_json, \
+    get_normalization_guidelines_from_csv
+from pieutils.evaluation import evaluate_predictions, calculate_cost_per_1k, visualize_performance
 from pieutils.fusion import fuse_models
-from pieutils.preprocessing import update_task_dict_from_test_set, load_known_attribute_values
+from pieutils.normalization import normalize_data
+from pieutils.preprocessing import update_task_dict_from_normalized_test_set, \
+    load_known_value_correspondences_for_normalized_attributes, update_task_dict_from_test_set
 from pieutils.pydantic_models import ProductCategory
 from pieutils.search import CategoryAwareSemanticSimilarityExampleSelector
 
 
 @click.command()
 @click.option('--dataset', default='wdc', help='Dataset Name')
-@click.option('--model', default='gpt-3.5-turbo-0613', help='Model name')
+@click.option('--model', default='gpt-3.5-turbo-16k-0613', help='Model name')
 @click.option('--verbose', default=True, help='Verbose mode')
 @click.option('--shots', default=10, help='Number of shots for few-shot learning')
 @click.option('--example_selector', default='SemanticSimilarity', help='Example selector for few-shot learning')
 @click.option('--train_percentage', default=0.2, help='Percentage of training data used for in-context learning')
-@click.option('--with_containment', default=False, help='Use containment')
 @click.option('--with_validation_error_handling', default=False, help='Use validation error handling')
 @click.option('--schema_type', default='json_schema', help='Schema to use - json_schema, json_schema_no_type or compact')
 @click.option('--no_example_values', default=10, help='Number of example values extracted from training set')
+@click.option('--title', default=True, help = 'Include Title')
 @click.option('--replace_example_values', default=True, help='Replace example values with known attribute values')
-@click.option('--title', default=True, help='Include Title')
-@click.option('--description', default=True, help='Include description')
-@click.option('--force_from_different_website', default=False, help='For WDC Data, ensures that shots come from different Website')
+@click.option('--description', default=True, help = 'Include description')
+@click.option('--force_from_different_website', default=False, help = 'For WDC Data, ensures that shots come from different Website')
+@click.option('--normalization_params', default="['Name Expansion', 'Numeric Standardization', 'To Uppercase', 'Substring Extraction', 'Product Type Generalisation', 'Unit Conversion', 'Color Generalization', 'Binary Classification', 'Name Generalisation','Unit Expansion', 'To Uppercase', 'Delete Marks']", help = 'Which normalizations should be included')
 @click.option('--separate', default=False, help = 'Run title and description separately and fuse models after')
-def main(dataset, model, verbose, shots, example_selector, train_percentage, with_containment, with_validation_error_handling, schema_type, no_example_values, title, description, force_from_different_website, separate, replace_example_values):
+@click.option('--normalized_only', default=True, help = 'Extract only attributes that are viable for normalization')
+def main(dataset, model, verbose, shots, example_selector, train_percentage, with_validation_error_handling, schema_type, no_example_values, title, description, force_from_different_website, separate, normalized_only, normalization_params, replace_example_values):
     # Load task template
     with open('prompts/task_template.json', 'r') as f:
         task_dict = json.load(f)
 
-    task_dict['task_name'] = "chatgpt_description_with_example_values_in-context_learning_{}_{}_{}_shots_{}_{}_{}-{}_{}_{}_example_values".format(
-        dataset, model, shots, example_selector, train_percentage, no_example_values, 'containment_check' if with_containment else '',
-        'validation_error_handling' if with_containment else '', schema_type).replace('.', '_').replace('-', '_').replace('/', '_')
-    task_dict['task_prefix'] = "Split the product {part} by whitespace. " \
-                               "Extract the valid attribute values from the product {part} in JSON format. Keep the " \
-                               "exact surface form of all attribute values. All valid attributes are provided in the " \
-                               "JSON schema. Unknown attribute values should be marked as 'n/a'. Do not explain your answer."
+    # Load second task template for raw-extracted attribute values
+    with open('prompts/task_template.json', 'r') as f:
+        task_dict_raw_attribute_values = json.load(f)
+
+    normalization_params = ast.literal_eval(normalization_params)
+    normalized_dataset_name = f"{dataset}_normalized"
+
+    task_dict['task_name'] = "description_with_example_values_multiple_normalization_in-context_learning_{}_{}_{}_shots_{}_{}-{}_example_correspondences_{}_{}".format(
+        dataset, model, shots, example_selector, train_percentage, no_example_values,
+        'validation_error_handling' if with_validation_error_handling else '', schema_type).replace('.', '_').replace('-', '_').replace('/', '_')
+    
+    task_dict['task_prefix'] =  "The provided attribute values have been extracted from the mentioned product title and description. \n" \
+                                "Normalize the attribute values according to the guidelines below in JSON format. \n"\
+                                "Unknown attribute values should be marked as 'n/a'. " \
+                                "Do not explain your answer. \n" \
+                                "Guidelines: \n" \
+                                "{guidelines}"
 
     task_dict['dataset_name'] = dataset
     task_dict['timestamp'] = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -60,10 +73,35 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
     task_dict['example_selector'] = example_selector
     task_dict['train_percentage'] = train_percentage
 
+    task_dict_raw_attribute_values['dataset_name'] = dataset
+    task_dict_raw_attribute_values['timestamp'] = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+    train_split = f"train_{train_percentage}"
+    normalized_attributes = normalize_data(split=train_split, normalization_params=normalization_params)
+    normalized_attributes = normalize_data(split="test", normalization_params=normalization_params)
+
     # Load examples into task dict
-    task_dict = update_task_dict_from_test_set(task_dict,title, description)
-    known_attribute_values = load_known_attribute_values(task_dict['dataset_name'], title, description, n_examples=no_example_values,
-                                                         train_percentage=train_percentage)
+    params = "_".join(normalization_params)
+    file_name_test = f"normalized_test_{params}"
+    file_name_train= f"normalized_{train_split}_{params}"
+    task_dict = update_task_dict_from_normalized_test_set(task_dict,file_name_test,title, description, normalized_only, normalized_attributes)
+
+    task_dict_raw_attribute_values = update_task_dict_from_test_set(task_dict_raw_attribute_values, title, description)
+
+    # Add goldstandard not normalized example values to task_dict
+    for example, raw_example in zip(task_dict['examples'], task_dict_raw_attribute_values['examples']):
+        # Convert target scores to json
+        attributes_for_normalisation = normalized_attributes[example['category']]
+        raw_attribute_values = {attribute: list(value.keys())[0] for attribute, value in
+                                raw_example['target_scores'].items() if attribute in attributes_for_normalisation}
+        example['input_extracted_attribute_values'] = json.dumps(raw_attribute_values, indent=4)
+
+    known_attribute_values = load_known_value_correspondences_for_normalized_attributes(task_dict['dataset_name'],
+                                                                                    normalized_only, 
+                                                                                    normalized_attributes,
+                                                                                    file_name_train=file_name_train,
+                                                                                    n_examples=no_example_values,
+                                                                                    train_percentage=train_percentage)
     if verbose:
         print('Known attribute values:')
         print(known_attribute_values)
@@ -135,18 +173,22 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
         json.dump(models_json, f, indent=4)
 
     # Create Chains
-    system_message_prompt = SystemMessagePromptTemplate.from_template("You are a world class algorithm for extracting information in structured formats. \n {schema} ")
+    system_message_prompt = SystemMessagePromptTemplate.from_template(
+        "You are a world class algorithm for normalizing structured attribute-value pairs. \n {schema}")
     human_task_prompt = HumanMessagePromptTemplate.from_template(task_dict['task_prefix'])
 
     # Add few shot sampling
     if example_selector == 'SemanticSimilarity':
-        category_example_selector = CategoryAwareSemanticSimilarityExampleSelector(task_dict['dataset_name'], 
+        category_example_selector = CategoryAwareSemanticSimilarityExampleSelector(normalized_dataset_name, 
                                                                                      list(task_dict['known_attributes'].keys()),
                                                                                      title, description,
-                                                                                     load_from_local=False,
-                                                                                     k=shots, 
-                                                                                     train_percentage=train_percentage, 
-                                                                                     force_from_different_website = force_from_different_website)
+                                                                                     load_from_local=False, 
+                                                                                     k=shots, train_percentage=train_percentage, 
+                                                                                     normalization_params=normalization_params, 
+                                                                                     normalized_only=normalized_only, 
+                                                                                     normalized_attributes=normalized_attributes, 
+                                                                                     force_from_different_website = force_from_different_website,
+                                                                                     add_raw_extractions=True)
     else:
         raise NotImplementedError("Example selector {} not implemented".format(example_selector))
 
@@ -169,19 +211,6 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
     chain = LLMChain(
         prompt=prompt,
         llm=llm,
-        verbose=verbose
-    )
-
-    # Containment chain:
-    ai_response = AIMessagePromptTemplate.from_template("{response}")
-    human_verfification_request = HumanMessagePromptTemplate.from_template(
-        'The attribute value(s) "{values}" is/are not found as exact substrings in the product title "{input}". Update all attribute values such that they are substrings of the product title.')
-    verification_prompt_list = [system_message_prompt, human_task_prompt, human_message_prompt, ai_response,
-                                human_verfification_request]
-    verification_prompt = ChatPromptTemplate(messages=verification_prompt_list)
-    verification_chain = LLMChain(
-        prompt=verification_prompt,
-        llm=default_llm,
         verbose=verbose
     )
 
@@ -217,13 +246,13 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
 
         return pred, error_handling_response
 
-    def select_and_run_llm(category, input_text, part='title', with_validation_error_handling=True,
-                           with_containment=True, schema_type='json_schema', url=None):
+    def select_and_run_llm(category, input_text, part='title', with_validation_error_handling=True, schema_type='json_schema', url=None):
         pred = None
+        guidelines = get_normalization_guidelines_from_csv(normalization_params, category, normalized_only)
         try:
             response = chain.run(input=input_text,
                                  schema=convert_to_json_schema(pydantic_models[category], schema_type=schema_type),
-                                 part=part, category=category, url = url)
+                                 part=part, category=category, guidelines=guidelines, url=url)
 
             try:
                 # Convert json string into pydantic model
@@ -252,38 +281,9 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
                 print(e)
                 print('Response: ')
                 print(response)
-
-            if pred is not None and with_containment:
-                # Verify if the extracted attribute values are contained in the input text and make sure that no loop is entered.
-                not_found_values = [v for v in pred.dict().values() if
-                                    v is not None and v != 'n/a' and v not in input_text]
-                previous_responses = []
-                while len(not_found_values) > 0 and response not in previous_responses:
-                    # Verify extracted attribute values
-                    if verbose:
-                        print('Not found values: {}'.format(not_found_values))
-                    # Try this only once to avoid infinite loops
-                    verified_response = verification_chain.run(input=input_text,
-                                                               schema=convert_to_json_schema(pydantic_models[category]),
-                                                               response=response, values='", "'.join(not_found_values),
-                                                               part=part)
-                    previous_responses.append(response)
-                    try:
-                        if verbose:
-                            print(json.loads(verified_response))
-                        pred = pydantic_models[category](**json.loads(verified_response))
-                        not_found_values = [v for v in pred.dict().values() if
-                                            v is not None and v != 'n/a' and v not in input_text]
-                    except ValidationError as valError:
-                        if with_validation_error_handling:
-                            pred, verified_response = validation_error_handling(category, input_text, verified_response,
-                                                                                valError, part)
-                        else:
-                            print('Validation Error: {}'.format(valError))
-                    except JSONDecodeError as e:
-                        print('Error: {}'.format(e))
         except Exception as e:
             print(e)
+
         return pred
 
     with get_openai_callback() as cb:
@@ -291,18 +291,23 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
             if not separate:
                 if title and description:
                     # append title and description
-                    preds = [select_and_run_llm(example['category'], 
-                                                f"title: {example['input_title']} \n description: {example['input_description']}", 
+                    preds = [select_and_run_llm(example['category'],
+                                                input_text=f"Title: {example['input_title']} \n" \
+                                                           f"Description: {example['input_description']} \n" \
+                                                           f"Attribute-Value Pairs: {example['input_extracted_attribute_values']}",
                                                 part='title and description')
                                                 for example in tqdm(task_dict['examples'], disable=not verbose)]
                 elif title and not description:
                     preds = [select_and_run_llm(example['category'], 
-                                                f"title: {example['input_title']}", 
+                                                input_text=f"Title: {example['input_title']} \n" \
+                                                       f"Attribute-Value Pairs: {example['input_extracted_attribute_values']}",
+
                                                 part='title')
                                                 for example in tqdm(task_dict['examples'], disable=not verbose)]
                 elif description and not title:
-                    preds = [select_and_run_llm(example['category'], 
-                                                f"description: {example['input_description']}", 
+                    preds = [select_and_run_llm(example['category'],
+                                                input_text=f"Description: {example['input_description']} \n" \
+                                                           f"Attribute-Value Pairs: {example['input_extracted_attribute_values']}",
                                                 part='description')
                                                 for example in tqdm(task_dict['examples'], disable=not verbose)]
             else:
@@ -359,30 +364,6 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
     
     # Visualize results
     visualize_performance(task_dict)
-
-    if dataset == "wdc":
-        # Evaluate performance only for normalizable attributes
-        task_dict_subset = subset_task_dict(task_dict)
-
-        targets = [example['target_scores'] for example in task_dict_subset['examples']]
-        preds = [example['pred'] for example in task_dict_subset['examples']]
-        categories = [example['category'] for example in task_dict_subset['examples']]
-        postprocessed_preds = [pred if pred is not None else '' for pred in preds]
-
-        task_dict_subset['examples'] = [combine_example(example, pred, post_pred)
-                                for example, pred, post_pred in
-                                zip(task_dict_subset['examples'], postprocessed_preds, postprocessed_preds)]
-
-        task_dict_subset['results'] = calculate_recall_precision_f1_multiple_attributes(targets, postprocessed_preds, categories,
-                                                                                task_dict_subset['known_attributes'])
-
-        #print(task_dict['results'])
-        print("Performance on attributes which are considered in normalization:")
-        print(task_dict_subset['results']['micro'])
-
-        task_dict_subset['task_name'] = f"{task_dict['task_name']}_subset"
-        save_populated_task_to_json(task_dict_subset['task_name'], task_dict, title, description)
-
 
 if __name__ == '__main__':
     load_dotenv()

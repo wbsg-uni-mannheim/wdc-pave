@@ -254,7 +254,7 @@ def load_known_attribute_values_for_normalized_attributes(dataset_name, title, d
     if test_set:
         file_path = os.path.join(directory_path, f'test.jsonl')
     else:
-        if train_percentage < 1.0:
+        if train_percentage <= 1.0:
             file_path = os.path.join(directory_path, f'train_{train_percentage}.jsonl')
         else:
             file_path = os.path.join(directory_path, 'train.jsonl')
@@ -497,12 +497,12 @@ def preprocess_wdc(dataset_name='wdc'):
         product_dict, test_size=0.25, random_state=42)
 
     # Save train split
-    with open(os.path.join("../data/processed_datasets/wdc/", "train.jsonl"), "w") as f:
+    with open(os.path.join("../data/processed_datasets/old_structure/wdc/", "train.jsonl"), "w") as f:
         for example in train_examples:
             f.write(json.dumps(example) + "\n")
 
     # Save test split
-    with open(os.path.join("../data/processed_datasets/wdc/", "test.jsonl"), "w") as f:
+    with open(os.path.join("../data/processed_datasets/old_structure/wdc/", "test.jsonl"), "w") as f:
         for example in test_examples:
             f.write(json.dumps(example) + "\n")
 

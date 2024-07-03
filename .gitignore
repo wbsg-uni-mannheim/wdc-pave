@@ -6,7 +6,7 @@
 /task_run_1/
 /deprecated/
 /meta_models/
-/runs/*
+prompts/runs/*
 *.faiss
 *.pkl
-#data/
+/__pycache__/

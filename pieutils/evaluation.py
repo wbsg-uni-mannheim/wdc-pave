@@ -362,8 +362,8 @@ def calculate_cost_per_1k(total_costs, task_dict):
     return (total_costs/n_attributes) * 1000
 
 def visualize_performance(task_dict):
-    if not os.path.exists('../figures'):
-        os.makedirs('../figures')
+    if not os.path.exists('figures'):
+        os.makedirs('figures')
 
     dataset_name = task_dict["dataset_name"]
     task_name = task_dict['task_name']
@@ -400,11 +400,11 @@ def visualize_performance(task_dict):
     ax.axvline(x=overall_f1, color='black') 
 
     fig.tight_layout()
-    plt.savefig(f'../figures/{dataset_name}_{task_name}_{model}_{timestamp}.svg')
+    plt.savefig(f'figures/{dataset_name}_{task_name}_{model}_{timestamp}.svg')
     plt.close()
 
 def visualize_performance_from_file(file_name):
-    with open(f'../prompts/runs/{file_name}', 'r') as f:
+    with open(f'prompts/runs/{file_name}', 'r') as f:
         task_dict = json.load(f)
 
     dataset_name = task_dict["dataset_name"]
@@ -439,7 +439,7 @@ def visualize_performance_from_file(file_name):
     ax.axvline(x=overall_f1, color='black') 
 
     fig.tight_layout()
-    plt.savefig(f'../figures/{dataset_name}_{task_name}_{model}_{timestamp}.svg')
+    plt.savefig(f'figures/{dataset_name}_{task_name}_{model}_{timestamp}.svg')
     plt.close()
 
 
@@ -450,6 +450,8 @@ def evaluate_predictions_with_data_types(task_dict):
     cat_attr_dtype_eval_dict = defaultdict(lambda: {'NN': 0, 'NV': 0, 'VN': 0, 'VC': 0, 'VW': 0, 'total': 0})
 
     for example in task_dict['examples']:
+        if 'post_pred' not in example:
+            continue
         preds = example['post_pred']
         if preds:
             predictions = json.loads(example['post_pred'])
@@ -575,7 +577,7 @@ def visualize_performance_by_data_types(results, task_name, dataset_name, timest
         ax.set_title(f'{category} (Category Mean F1: {category_mean_f1:.2f})')
 
     plt.tight_layout(pad=0.5)
-    plt.savefig(f'../figures/data_types/{dataset_name}_{task_name}_{timestamp}_combined.svg')
+    plt.savefig(f'figures/data_types/{dataset_name}_{task_name}_{timestamp}_combined.svg')
     plt.close()
 
 
@@ -605,13 +607,13 @@ def visualize_performance_by_data_types(results, task_name, dataset_name, timest
     ax.set_title('Performance by Data Type')
 
     plt.tight_layout()
-    plt.savefig(f'../figures/data_types/{dataset_name}_{task_name}_{timestamp}_overall.svg')
+    plt.savefig(f'figures/data_types/{dataset_name}_{task_name}_{timestamp}_overall.svg')
     plt.close()
 
     
 def evaluate_normalization_performance(task_name, converted_results):
     # Load normalization types from CSV
-    directory_path = f"../data/descriptions/wdc/descriptions.csv"
+    directory_path = f"data/descriptions/wdc/descriptions.csv"
     descriptions_csv = pd.read_csv(directory_path, sep=";")
     descriptions_csv["Normalization_params"] = descriptions_csv["Normalization_params"].str.strip("[]").str.replace("'", "")
     descriptions_csv["Normalization_params_general"] = descriptions_csv["Normalization_params_general"].str.strip("[]").str.replace("'", "")
@@ -698,7 +700,7 @@ def evaluate_normalization_performance(task_name, converted_results):
     ax.set_xlim([0, 1])
 
     plt.tight_layout()
-    plt.savefig(f'../figures/normalization/{task_name}_performance_normalization.svg')
+    plt.savefig(f'figures/normalization/{task_name}_performance_normalization.svg')
     plt.close()
 
     # Separate by Normalization Operation:
@@ -757,13 +759,13 @@ def evaluate_normalization_performance(task_name, converted_results):
             ax.legend()
 
     plt.tight_layout()
-    plt.savefig(f'../figures/normalization/{task_name}_performance_normalization_by_operation.svg')
+    plt.savefig(f'figures/normalization/{task_name}_performance_normalization_by_operation.svg')
     plt.close()
 
 import copy
 
 def evaluate_normalization_performance_one_by_one(original_task_dict):
-    directory_path = f"../data/descriptions/wdc/descriptions.csv"
+    directory_path = f"data/descriptions/wdc/descriptions.csv"
     descriptions_csv = pd.read_csv(directory_path, sep=";")
     descriptions_csv["Normalization_params"] = descriptions_csv["Normalization_params"].str.strip("[]").str.replace("'", "")
     descriptions_csv["Normalization_params_general"] = descriptions_csv["Normalization_params_general"].str.strip("[]").str.replace("'", "")

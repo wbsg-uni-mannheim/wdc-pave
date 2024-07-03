@@ -33,8 +33,8 @@ def main(dataset):
         df = pd.DataFrame(product_dict)
 
     elif dataset == "wdc_normalized":
-        directory_path_train = f"../data/processed_datasets/wdc/normalized/normalized_train_1.0_Name Expansion_Numeric Standardization_To Uppercase_Selective Identifier Parsing_Product Type Generalisation_Unit Conversion_Color Generalization_Binary Classification_Name Generalisation_Unit Expansion_To Uppercase_Delete Marks.jsonl"
-        directory_path_test = f"../data/processed_datasets/wdc/normalized/normalized_test_Name Expansion_Numeric Standardization_To Uppercase_Selective Identifier Parsing_Product Type Generalisation_Unit Conversion_Color Generalization_Binary Classification_Name Generalisation_Unit Expansion_To Uppercase_Delete Marks.jsonl"
+        directory_path_train = f"../data/processed_datasets/deprecated/wdc/normalized/normalized_train_1.0_Name Expansion_Numeric Standardization_To Uppercase_Selective Identifier Parsing_Product Type Generalisation_Unit Conversion_Color Generalization_Binary Classification_Name Generalisation_Unit Expansion_To Uppercase_Delete Marks.jsonl"
+        directory_path_test = f"../data/processed_datasets/deprecated/wdc/normalized/normalized_test_Name Expansion_Numeric Standardization_To Uppercase_Selective Identifier Parsing_Product Type Generalisation_Unit Conversion_Color Generalization_Binary Classification_Name Generalisation_Unit Expansion_To Uppercase_Delete Marks.jsonl"
         directories = [directory_path_train, directory_path_test]
 
         product_dict = []

@@ -33,14 +33,14 @@ from pieutils.pydantic_models import ProductCategory, ProductCategorySpec
 @click.option('--with_validation_error_handling', default=False, help='Use validation error handling')
 @click.option('--schema_type', default='json_schema', help='Schema to use - json_schema, json_schema_no_type or compact')
 @click.option('--replace_example_values', default=True, help='Replace example values with known attribute values')
-@click.option('--train_percentage', default=1.0, help='Percentage of training data used for example value selection')
-@click.option('--no_example_values', default=10, help='Number of example values extracted from training set')
-@click.option('--title', default=False, help = 'Include Title')
-@click.option('--description', default=False, help = 'Include description')
+@click.option('--train_percentage', default=0.2, help='Percentage of training data used for example value selection')
+@click.option('--no_example_values', default=3, help='Number of example values extracted from training set')
+@click.option('--title', default=True, help = 'Include Title')
+@click.option('--description', default=True, help = 'Include description')
 @click.option('--separate', default=False, help = 'Run title and description separately and fuse models after')
 def main(dataset, model, verbose, with_containment, with_validation_error_handling, schema_type, replace_example_values, train_percentage, no_example_values, title, description, separate):
     # Load task template
-    with open('../prompts/task_template.json', 'r') as f:
+    with open('prompts/task_template.json', 'r') as f:
         task_dict = json.load(f)
 
     task_dict['task_name'] = f"chatgpt_description_with_all_example_values_{no_example_values}_examples_{schema_type}_{'containment_check' if with_containment else ''}_{'validation_error_handling' if with_validation_error_handling else ''}"
@@ -110,7 +110,7 @@ def main(dataset, model, verbose, with_containment, with_validation_error_handli
                                 'known_attribute_values': known_attribute_values_per_category})
             response_dict = json.loads(response)
             for attribute in response_dict['attributes']:
-                if not attribute['examples']:  # Check if examples list is empty
+                if 'examples' in attribute and not attribute['examples']:  # Check if examples list is empty
                     del attribute['examples']  # Remove the examples key
             pred = ProductCategory(**response_dict)
             try:
@@ -173,7 +173,7 @@ def main(dataset, model, verbose, with_containment, with_validation_error_handli
 
 
     # Persist models
-    with open('../prompts/meta_models/models_by_{}_{}.json'.format(task_dict['task_name'], 'default_gpt3_5', task_dict['dataset_name']), 'w', encoding='utf-8') as f:
+    with open('prompts/meta_models/models_by_{}_{}.json'.format(task_dict['task_name'], 'default_gpt3_5', task_dict['dataset_name']), 'w', encoding='utf-8') as f:
         json.dump(models_json, f, indent=4)
 
     # Create Chains

@@ -1,5 +1,5 @@
 #!/bin/bash
-export PYTHONPATH="/mnt/c/Users/nbaum/Dropbox/wdc-pave/:$PYTHONPATH"
+export PYTHONPATH=$(pwd)
 
 datasets=("wdc") 
 models=("gpt-3.5-turbo-0613") 

@@ -1925,21 +1925,21 @@ def normalize_data(split="test", normalization_params=['Name Expansion', 'Numeri
     data = []
 
     if split == "test":
-        jsonl_path_test = f'../data/processed_datasets/wdc/test.jsonl'
+        jsonl_path_test = f'data/processed_datasets/wdc/test.jsonl'
         with open(jsonl_path_test, "r", encoding="utf-8") as file:
             for line in file:
                 json_obj = json.loads(line)
                 data.append(json_obj)
 
     elif split == "train_1.0":
-        jsonl_path_train = f'../data/processed_datasets/wdc/train.jsonl'
+        jsonl_path_train = f'data/processed_datasets/wdc/train.jsonl'
         with open(jsonl_path_train, "r", encoding="utf-8") as file:
             for line in file:
                 json_obj = json.loads(line)
                 data.append(json_obj)
 
     elif split == "train_0.2":
-        jsonl_path_train = f'../data/processed_datasets/wdc/train_0.2.jsonl'
+        jsonl_path_train = f'data/processed_datasets/wdc/train_0.2.jsonl'
         with open(jsonl_path_train, "r", encoding="utf-8") as file:
             for line in file:
                 json_obj = json.loads(line)
@@ -2657,12 +2657,12 @@ def normalize_data(split="test", normalization_params=['Name Expansion', 'Numeri
     
     name = f"normalized_{split}_{params}"
 
-    with open(os.path.join("../data/processed_datasets/wdc/normalized/", f"{name}.jsonl"), "w", encoding='utf-8') as f:
+    with open(os.path.join("data/processed_datasets/wdc/normalized/", f"{name}.jsonl"), "w", encoding='utf-8') as f:
         for example in data:
             f.write(json.dumps(example) + "\n")
 
     name = f"normalized_{split}"
-    with open(os.path.join("../data/processed_datasets/wdc/normalized/", f"{name}.jsonl"), "w", encoding='utf-8') as f:
+    with open(os.path.join("data/processed_datasets/wdc/normalized/", f"{name}.jsonl"), "w", encoding='utf-8') as f:
         for example in data:
             f.write(json.dumps(example) + "\n")
 

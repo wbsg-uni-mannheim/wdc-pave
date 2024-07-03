@@ -250,8 +250,12 @@ def initialize_vector_store(dataset_name, title, description, load_from_local=Fa
     # Load the training data.
     if dataset_name in ['mave', 'mave_v2', 'ae-110k', 'oa-mine', 'mave_random', 'wdc']:
         train_records = load_train_for_vector_store(dataset_name, categories, title, description, train_percentage=train_percentage, force_from_different_website=force_from_different_website)
+        train_records_raw = None
     elif dataset_name == "wdc_normalized":
-        train_records = load_train_for_vector_store(dataset_name, categories, title, description, train_percentage=train_percentage, normalization_params=normalization_params,normalized_only=normalized_only, normalized_attributes=normalized_attributes, force_from_different_website=force_from_different_website)
+        train_records = load_train_for_vector_store(dataset_name, categories, title, description, train_percentage=train_percentage, normalization_params=normalization_params, normalized_only=normalized_only, normalized_attributes=normalized_attributes, force_from_different_website=force_from_different_website)
+        train_records_raw = load_train_for_vector_store('wdc', categories, title, description,
+                                                    train_percentage=train_percentage,
+                                                    force_from_different_website=force_from_different_website)
     else:
         raise ValueError(f'Dataset {dataset_name} not supported!')
 
@@ -267,19 +271,28 @@ def initialize_vector_store(dataset_name, title, description, load_from_local=Fa
                                                                   embeddings=OpenAIEmbeddings(), index_name=index_name)
     else:
         for category in categories:
-            if force_from_different_website:
+
+            if train_records_raw is not None:
                 inputs = [record['input'] for record in train_records.values() if record['category'] == category]
-                metadatas = [{'input': record['input'], 'output': json.dumps(record['extractions']), 'url': record['url']}
-                            for record in train_records.values() if record['category'] == category]
                 ids = [key for key in train_records.keys() if train_records[key]['category'] == category]
-                category_to_vector_store[category] = FAISS.from_texts(inputs, OpenAIEmbeddings(), metadatas=metadatas, ids=ids)
+                if force_from_different_website:
+                    metadatas = [{'input': record['input'], 'output': json.dumps(record['extractions']), 'url': record['url'], 'raw_extractions': raw_record['extractions']}
+                                for record, raw_record in zip(train_records.values(), train_records_raw.values()) if record['category'] == category]
+                else:
+                    metadatas = [{'input': record['input'], 'output': json.dumps(record['extractions']), 'raw_extractions': raw_record['extractions']}
+                                for record, raw_record in zip(train_records.values(), train_records_raw.values()) if record['category'] == category]
             else:
                 inputs = [record['input'] for record in train_records.values() if record['category'] == category]
-                metadatas = [{'input': record['input'], 'output': json.dumps(record['extractions'])}
-                            for record in train_records.values() if record['category'] == category]
                 ids = [key for key in train_records.keys() if train_records[key]['category'] == category]
-                category_to_vector_store[category] = FAISS.from_texts(inputs, OpenAIEmbeddings(), metadatas=metadatas,
-                                                                    ids=ids)
+                if force_from_different_website:
+                    metadatas = [{'input': record['input'], 'output': json.dumps(record['extractions']), 'url': record['url']}
+                                for record in train_records.values() if record['category'] == category]
+                else:
+                    metadatas = [{'input': record['input'], 'output': json.dumps(record['extractions'])}
+                                for record in train_records.values() if record['category'] == category]
+
+            category_to_vector_store[category] = FAISS.from_texts(inputs, OpenAIEmbeddings(), metadatas=metadatas,
+                                                                  ids=ids)
             # Check if directory for vector store exists.
             folder_path = f'{FAISS_INDEXES}/{dataset_name}'
             if not os.path.exists(folder_path):
@@ -401,7 +414,7 @@ def convert_example_to_pydantic_model_example(example, pydantic_model):
 class CategoryAwareSemanticSimilarityExampleSelector(BaseExampleSelector):
 
     def __init__(self, dataset_name, categories, title, description, category_2_pydantic_models=None, load_from_local=False, k=5,
-                 tabular=False, train_percentage=1.0, normalization_params=None, normalized_only=False, normalized_attributes=None, force_from_different_website=False, attributes=None) -> None:
+                 tabular=False, train_percentage=1.0, normalization_params=None, normalized_only=False, normalized_attributes=None, force_from_different_website=False, attributes=None, add_raw_extractions=False) -> None:
         """Initialize the example selector from the datasets"""
         category_to_vector_store = initialize_vector_store(dataset_name, title, description, load_from_local=load_from_local, categories=categories, train_percentage=train_percentage, normalization_params=normalization_params, normalized_only=normalized_only, normalized_attributes=normalized_attributes, force_from_different_website=force_from_different_website)
 
@@ -424,6 +437,8 @@ class CategoryAwareSemanticSimilarityExampleSelector(BaseExampleSelector):
         elif tabular:
             print('Tabular is set to True but no pydantic models are provided. Tabular will be set to False.')
             self.tabular = False
+
+        self.add_raw_extractions = add_raw_extractions
 
     def add_example(self, example: Dict[str, str]) -> None:
         """Add new example to store for a key."""
@@ -463,7 +478,8 @@ class CategoryAwareSemanticSimilarityExampleSelector(BaseExampleSelector):
                 example['output'] = json.dumps(filtered_output) 
                 filtered_examples.append(example)
             selected_examples = filtered_examples
-    
+
+        # Convert examples to pydantic models.
         if self.category_2_pydantic_models is not None:
 
             if self.tabular:
@@ -478,6 +494,15 @@ class CategoryAwareSemanticSimilarityExampleSelector(BaseExampleSelector):
                 pydantic_model = self.category_2_pydantic_models[input_variables['category']]
                 selected_examples = [convert_example_to_pydantic_model_example(example, pydantic_model) for example in
                                     selected_examples]
+
+        # Provide raw_extractions if applicable.
+        if self.add_raw_extractions:
+            for example in selected_examples:
+                # Filter raw extractions to extractions in output
+                raw_extractions = {attribute: example['raw_extractions'][attribute]
+                                    for attribute in json.loads(example['output'])}
+                # Extend input
+                example['input'] = f"{example['input']} \n Attribute-Values Pairs: {json.dumps(raw_extractions)}"
 
         return selected_examples
 

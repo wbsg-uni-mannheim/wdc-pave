@@ -42,7 +42,7 @@ def main(dataset, model, verbose, title, description, separate):
     task_dict['timestamp'] = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Load examples into task dict
-    task_dict = update_task_dict_from_test_set(task_dict,title, description)
+    task_dict = update_task_dict_from_test_set(task_dict, title, description)
 
     # Initialize model
     task_dict['model'] = model

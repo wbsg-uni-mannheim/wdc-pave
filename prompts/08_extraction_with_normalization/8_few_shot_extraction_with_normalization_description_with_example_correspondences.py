@@ -30,22 +30,22 @@ from pieutils.search import CategoryAwareSemanticSimilarityExampleSelector
 @click.option('--dataset', default='wdc', help='Dataset Name')
 @click.option('--model', default='gpt-3.5-turbo-0613', help='Model name')
 @click.option('--verbose', default=True, help='Verbose mode')
-@click.option('--shots', default=3, help='Number of shots for few-shot learning')
+@click.option('--shots', default=10, help='Number of shots for few-shot learning')
 @click.option('--example_selector', default='SemanticSimilarity', help='Example selector for few-shot learning')
-@click.option('--train_percentage', default=1.0, help='Percentage of training data used for in-context learning')
+@click.option('--train_percentage', default=0.2, help='Percentage of training data used for in-context learning')
 @click.option('--with_validation_error_handling', default=False, help='Use validation error handling')
 @click.option('--schema_type', default='json_schema', help='Schema to use - json_schema, json_schema_no_type or compact')
 @click.option('--no_example_values', default=10, help='Number of example values extracted from training set')
-@click.option('--title', default=False, help = 'Include Title')
+@click.option('--title', default=True, help = 'Include Title')
 @click.option('--replace_example_values', default=True, help='Replace example values with known attribute values')
-@click.option('--description', default=False, help = 'Include description')
+@click.option('--description', default=True, help = 'Include description')
 @click.option('--force_from_different_website', default=False, help = 'For WDC Data, ensures that shots come from different Website')
 @click.option('--normalization_params', default="['Name Expansion', 'Numeric Standardization', 'To Uppercase', 'Substring Extraction', 'Product Type Generalisation', 'Unit Conversion', 'Color Generalization', 'Binary Classification', 'Name Generalisation','Unit Expansion', 'To Uppercase', 'Delete Marks']", help = 'Which normalizations should be included')
 @click.option('--separate', default=False, help = 'Run title and description separately and fuse models after')
 @click.option('--normalized_only', default=True, help = 'Extract only attributes that are viable for normalization')
 def main(dataset, model, verbose, shots, example_selector, train_percentage, with_validation_error_handling, schema_type, no_example_values, title, description, force_from_different_website, separate, normalized_only, normalization_params, replace_example_values):
     # Load task template
-    with open('../prompts/task_template.json', 'r') as f:
+    with open('prompts/task_template.json', 'r') as f:
         task_dict = json.load(f)
 
     normalization_params = ast.literal_eval(normalization_params)
@@ -150,7 +150,7 @@ def main(dataset, model, verbose, shots, example_selector, train_percentage, wit
         models_json[category] = create_dict_of_pydanctic_product(pydantic_models[category])
 
     # Persist models
-    with open('../prompts/meta_models/models_by_{}_{}.json'.format(task_dict['task_name'], 'default_gpt3_5', task_dict['dataset_name']), 'w', encoding='utf-8') as f:
+    with open('prompts/meta_models/models_by_{}_{}.json'.format(task_dict['task_name'], 'default_gpt3_5', task_dict['dataset_name']), 'w', encoding='utf-8') as f:
         json.dump(models_json, f, indent=4)
 
     # Create Chains

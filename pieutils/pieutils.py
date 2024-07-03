@@ -140,11 +140,11 @@ def save_populated_task(task, task_dict):
     """Save the populated task to a file."""
     model_name = task_dict['model'].replace(':', '_').replace('/', '_')
     result_file = 'task_run_chat{}_{}_{}_{}.gz'.format(task, task_dict['dataset_name'], model_name, task_dict['timestamp'])
-    path_to_result_file = '../prompts/runs/{}'.format(result_file)
+    path_to_result_file = 'prompts/runs/{}'.format(result_file)
 
     # Check if the path to the result file exists
-    if not os.path.exists('../prompts/runs'):
-        os.makedirs('../prompts/runs')
+    if not os.path.exists('prompts/runs'):
+        os.makedirs('prompts/runs')
 
     with gzip.open(path_to_result_file, 'wt', encoding='utf-8') as fp:
         # set ensure_ascii=False to keep special chars
@@ -154,12 +154,12 @@ def save_populated_task_to_json(task, task_dict, title, description):
     """Save the populated task to a JSON file."""
     model_name = task_dict['model'].replace(':', '_').replace('/', '_')
     
-    result_file = 'task_run_chat_{}_{}_{}_{}_{}.json'.format(task, task_dict['dataset_name'], model_name, task_dict['timestamp'], 'title_and_description' if title and description else ('title' if title else "description"))
-    path_to_result_file = '../prompts/runs/{}'.format(result_file)
+    result_file = '{}_{}_{}_{}.json'.format(task, task_dict['dataset_name'], model_name, task_dict['timestamp'])
+    path_to_result_file = 'prompts/runs/{}'.format(result_file)
 
     # Check if the path to the result file exists
-    if not os.path.exists('../prompts/runs'):
-        os.makedirs('../prompts/runs')
+    if not os.path.exists('prompts/runs'):
+        os.makedirs('prompts/runs')
 
     with open(path_to_result_file, 'w', encoding='utf-8') as fp:
         # set ensure_ascii=False to keep special chars
@@ -268,7 +268,7 @@ def convert_to_json_schema(pydantic_model, replace_description=False, schema_typ
 
 
 def get_normalization_guidelines_from_csv(normalization_params, category, normalized_only):
-    directory_path = f"../data/descriptions/wdc/descriptions.csv"
+    directory_path = f"data/descriptions/wdc/descriptions.csv"
     descriptions_csv = pd.read_csv(directory_path, sep=";")
     descriptions_csv = descriptions_csv[["Category", "Attribute", "Normalization_params", "Normalization_instruction"]] 
 
@@ -813,7 +813,7 @@ def update_target_scores(target_scores, original_data_types):
     return updated_scores
 
 def detect_data_types_for_normalized_data(task_dict_normalized, title, description, dataset):
-    with open('../prompts/task_template.json', 'r') as f:
+    with open('prompts/task_template.json', 'r') as f:
         task_dict_original = json.load(f)
 
     task_dict_original["dataset_name"] = dataset
@@ -837,7 +837,7 @@ def detect_data_types_for_normalized_data(task_dict_normalized, title, descripti
     return task_dict_normalized
 
 def subset_task_dict(task_dict):
-    directory_path = f"../data/descriptions/wdc/descriptions.csv"
+    directory_path = f"data/descriptions/wdc/descriptions.csv"
     descriptions_csv = pd.read_csv(directory_path, sep=";")
 
     # Filter out rows where Normalization_instruction is not null
