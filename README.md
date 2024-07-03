@@ -15,7 +15,7 @@ The codebase requires python 3.9 To install dependencies we suggest to use a con
 conda create -n wdc-pave python=3.9
 conda activate wdc-pave
 pip install -r requirements.txt
-pip install pieutils/
+pip install .
 ```
 
 ## Dataset

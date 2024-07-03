@@ -40,7 +40,7 @@ for dataset in "${datasets[@]}"
           do
           for example_selector in "${example_selectors[@]}"
             do
-              python ../prompts/5_in-context_learning/in_context_schema_description_with_example_values.py --dataset $dataset --shots $shot --model $model --train_percentage $percentage --example_selector $example_selector --with_containment False --with_validation_error_handling False --title $title --description $description --force_from_different_website $force_from_different_website --separate $separate --no_example_values $no_example_values --replace_example_values $replace_example_values
+              python prompts/5_in-context_learning/in_context_schema_description_with_example_values.py --dataset $dataset --shots $shot --model $model --train_percentage $percentage --example_selector $example_selector --with_containment False --with_validation_error_handling False --title $title --description $description --force_from_different_website $force_from_different_website --separate $separate --no_example_values $no_example_values --replace_example_values $replace_example_values
           done
         done
     done

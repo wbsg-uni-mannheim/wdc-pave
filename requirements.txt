@@ -5,8 +5,10 @@ isoduration==20.11.0
 jsonpointer==2.3
 jupyter==1.0.0
 langchain==0.0.271
+matplotlib==3.9.0
 nltk==3.8.1
 openai==0.28.0
+plotly==5.22.0
 pip-chill==1.0.3
 python-dotenv==1.0.0
 sentencepiece==0.1.99

@@ -19,7 +19,7 @@ for dataset in "${datasets[@]}"; do
         for no_example_values in "${example_values_counts[@]}"; do  
             for schema_type in "${schema_types[@]}"; do
                 echo "Running experiments for $dataset, $model, $schema_type with $no_example_values example values"
-                python3 ../prompts/2_zero_shot_schema/zero_shot_schema_description_with_example_values.py --dataset $dataset --model $model --schema_type $schema_type --train_percentage $train_percentage --with_containment $with_containment --replace_example_values $replace_example_values --no_example_values $no_example_values --title $title --description $description --separate $separate
+                python3 prompts/2_zero_shot_schema/zero_shot_schema_description_with_example_values.py --dataset $dataset --model $model --schema_type $schema_type --train_percentage $train_percentage --with_containment $with_containment --replace_example_values $replace_example_values --no_example_values $no_example_values --title $title --description $description --separate $separate
             done
         done
     done
