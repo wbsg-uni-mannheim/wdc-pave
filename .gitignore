@@ -5,7 +5,6 @@
 *.gz
 /task_run_1/
 /deprecated/
-/meta_models/
 prompts/runs/*
 *.faiss
 *.pkl
